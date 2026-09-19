@@ -1,6 +1,6 @@
 """FlowEngine — high-level facade for the flow system.
 
-Used by the orchestrator, dashboard API, and CLI to interact with flows
+Used by the orchestrator, TUI, and CLI to interact with flows
 without importing runner/registry/triggers directly.
 """
 

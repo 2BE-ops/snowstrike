@@ -58,7 +58,7 @@ steps:
 
 ## Triggers
 
-- **Manual** — start via CLI, REST API, or dashboard
+- **Manual** — start via CLI or the TUI
 - **Event** — start when a matching event hits the event bus
 - **Schedule** — cron expression (via `croniter`)
 - **Agent request** — an agent can request a flow mid-engagement
@@ -74,8 +74,7 @@ python3 snowstrike_cli.py flow-run asset-discovery --target 10.10.10.5
 python3 snowstrike_cli.py flow-status <workspace-dir>
 ```
 
-REST: the dashboard exposes flow management under `/api/flows` (see
-`dashboard/api/flows.py`).
+The TUI's Flows screen wraps the same engine (list, validate, run, status).
 
 Each run materializes a workspace directory (`flow-workspaces/`) holding step
 state and artifacts. Workspaces are runtime data and are gitignored.

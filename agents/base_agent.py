@@ -1135,7 +1135,7 @@ BEFORE submitting your final summary, verify in your thinking:
         if pre_action == HookAction.DEFER:
             # Escalate to operator via approval queue
             import uuid as _uuid
-            from dashboard.api.approvals import ApprovalRequest, ApprovalType, get_approval_queue
+            from memory.approvals import ApprovalRequest, ApprovalType, get_approval_queue
             event_bus = get_event_bus()
             event_bus.emit(event_bus._make_event(
                 EventType.HOOK_DEFER, self.agent_name,
@@ -3618,7 +3618,7 @@ BEFORE submitting your final summary, verify in your thinking:
         }
         self.conversation_log.append(entry)
 
-        # Write to live turns file for real-time SSE streaming to dashboard
+        # Write to live turns file for real-time streaming to the TUI
         self._write_live_turn(entry)
 
     def _route_for_live_turn(self, role: str) -> tuple[str, str, str, str]:

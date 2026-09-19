@@ -143,7 +143,7 @@ class AgentRegistry:
         return dict(self._capabilities)
 
     def get_config(self, name: str) -> Optional[dict]:
-        """Return raw agent config for dashboard display."""
+        """Return raw agent config for display."""
         return self._configs.get(name)
 
     def list_agents(self) -> list[dict]:

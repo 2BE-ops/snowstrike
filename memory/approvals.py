@@ -1,21 +1,20 @@
-"""Approval queue for operator intervention during autonomous runs."""
+"""Approval queue for operator intervention during autonomous runs.
+
+Agents can escalate decisions to a human operator (hook DEFER rules,
+high-impact tool calls). Requesting threads block until the operator
+responds or the request times out (auto-deny).
+
+Consumed by the TUI approvals screen.
+"""
 
 import threading
 import time
-import uuid
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-
 from memory.event_bus import EventType, Event, get_event_bus
 
-router = APIRouter(prefix="/api")
-
-
-# --- Domain types ---
 
 class ApprovalType(str, Enum):
     TOOL_EXECUTION = "tool_execution"
@@ -38,8 +37,6 @@ class ApprovalRequest:
     responded_at: Optional[float] = None
 
 
-# --- Thread-safe queue ---
-
 class ApprovalQueue:
     """Thread-safe approval queue. Requesting threads block until operator responds."""
 
@@ -58,7 +55,7 @@ class ApprovalQueue:
             self._requests[request.id] = request
             self._events[request.id] = evt
 
-        # Notify dashboard via event bus
+        # Notify consumers via event bus
         get_event_bus().emit(Event(
             type=EventType.STATUS,
             source="approval_queue",
@@ -112,24 +109,3 @@ def get_approval_queue() -> ApprovalQueue:
         if ApprovalQueue._instance is None:
             ApprovalQueue._instance = ApprovalQueue()
         return ApprovalQueue._instance
-
-
-# --- API endpoints ---
-
-class ApprovalResponse(BaseModel):
-    approved: bool
-    note: str = ""
-
-
-@router.get("/approvals")
-async def list_pending():
-    pending = get_approval_queue().get_pending()
-    return [asdict(r) for r in pending]
-
-
-@router.post("/approvals/{request_id}")
-async def respond_to_approval(request_id: str, body: ApprovalResponse):
-    ok = get_approval_queue().respond(request_id, body.approved, body.note)
-    if not ok:
-        raise HTTPException(status_code=404, detail="Approval request not found or already resolved")
-    return {"status": "ok", "request_id": request_id, "approved": body.approved}

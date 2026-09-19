@@ -3,7 +3,7 @@ Incremental network graph builder with Mermaid, JSON, and DOT export.
 
 Maintains a JSON-backed graph of hosts, services, vulnerabilities, and
 relationships discovered during a penetration test.  Supports multiple
-export formats for inclusion in reports and dashboards.
+export formats for inclusion in reports and tooling.
 """
 
 import json

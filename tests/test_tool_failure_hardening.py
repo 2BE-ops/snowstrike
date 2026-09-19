@@ -10,7 +10,7 @@ anthropic_stub.RateLimitError = Exception
 sys.modules.setdefault("anthropic", anthropic_stub)
 
 from agents.base_agent import BaseAgent
-from dashboard.data.db_reader import DBReader
+from data.db_reader import DBReader
 from tools.executor import OutcomeKind, ToolResult
 
 
@@ -196,7 +196,7 @@ def test_log_synthetic_execution_persists_mapped_outcome_kind():
     assert agent.db.logged[1]["outcome_kind"] == "internal_failure"
 
 
-def test_dashboard_summary_surfaces_new_synthetic_outcomes(tmp_path):
+def test_outcome_summary_surfaces_new_synthetic_outcomes(tmp_path):
     db_path = tmp_path / "tool_execs.sqlite"
     conn = sqlite3.connect(db_path)
     try:

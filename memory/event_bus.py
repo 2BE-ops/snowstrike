@@ -3,7 +3,7 @@ SnowStrike AI v7.0 - Event Bus
 
 Central event system for real-time streaming of agent activity.
 Replaces polling with push-based event delivery. All components
-(agents, tools, orchestrator) emit events here; consumers (dashboard SSE,
+(agents, tools, orchestrator) emit events here; consumers (TUI,
 CLI, logging) subscribe and receive them instantly.
 """
 

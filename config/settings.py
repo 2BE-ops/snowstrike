@@ -382,7 +382,7 @@ TIER_PRESETS = {
     },
 }
 
-# Agent roles and tiers that can have model overrides (used by dashboard)
+# Agent roles and tiers that can have model overrides (used by the TUI)
 CONFIGURABLE_ROLES = [
     # Tiers
     {"key": "orchestrator", "label": "Orchestrator Tier"},

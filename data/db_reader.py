@@ -1,4 +1,4 @@
-"""Read-only SQLite access for the dashboard. Never writes."""
+"""Read-only SQLite access to engagement databases. Never writes."""
 
 import json
 import os
@@ -400,7 +400,7 @@ class DBReader:
         }
 
     def get_outcome_stats(self, engagement_id: int) -> dict:
-        """Quick summary of outcome distribution for dashboard cards."""
+        """Quick summary of outcome distribution for overview cards."""
         total = self._query_one(
             "SELECT COUNT(*) as c FROM tool_executions WHERE engagement_id = ?",
             (engagement_id,),

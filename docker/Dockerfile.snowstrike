@@ -9,7 +9,7 @@ WORKDIR /app
 COPY pyproject.toml ./
 RUN pip install --no-cache-dir . 2>/dev/null; \
     pip install --no-cache-dir \
-    anthropic openai fastapi uvicorn python-dotenv jinja2 pydantic httpx filelock pyyaml
+    anthropic openai textual python-dotenv jinja2 pydantic httpx filelock pyyaml croniter
 
 # ── Application code ────────────────────────────────────────────────────────
 COPY . .
@@ -20,6 +20,4 @@ RUN groupadd -g 1000 snowstrike && \
     chown -R 1000:1000 /app
 USER 1000:1000
 
-EXPOSE 8080
-
-CMD ["python3", "-m", "dashboard.app"]
+CMD ["python3", "snowstrike_cli.py", "tui"]

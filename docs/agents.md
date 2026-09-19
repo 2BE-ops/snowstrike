@@ -273,10 +273,8 @@ When adding a new agent type:
 3. Set `spec.capabilities` (skills, produces, requires)
 4. Set `spec.handoff_targets`
 5. Create a prompt template at `agents/prompts/<name>.md`
-6. Reload: `POST /api/builder/reload` or restart the dashboard
+6. Restart the orchestrator (or relaunch the TUI)
 7. The orchestrator will dispatch `BaseAgent` configured by YAML
-
-Or use the builder UI: `http://localhost:8080/builder` → "New Agent" or "Templates".
 
 ### Option B: Custom Python class
 

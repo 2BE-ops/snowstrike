@@ -3190,7 +3190,7 @@ class OrchestratorAgent:
 
     @staticmethod
     def _compute_todo_progress(items: list[dict]) -> dict:
-        """Compute completion stats for dashboard display."""
+        """Compute completion stats for display."""
         actionable_groups = {"primary_assignment", "definition_of_done"}
         actionable = [i for i in items if i.get("group") in actionable_groups]
         total = len(actionable)
@@ -3374,7 +3374,7 @@ class OrchestratorAgent:
     def execute_phase(self, phase: str) -> dict:
         """
         Execute a single phase by dispatching the appropriate agent.
-        Kept for backwards compatibility with the MCP server and dashboard.
+        Kept for backwards compatibility with the MCP server and TUI.
         Maps old phase names to agent dispatches.
         """
         state = self.shared_state.read()

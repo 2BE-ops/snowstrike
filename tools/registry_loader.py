@@ -157,7 +157,7 @@ class ToolRegistry:
         return list(self._shared_tools)
 
     def get_tool_config(self, name: str) -> Optional[dict]:
-        """Return full tool config for API/dashboard."""
+        """Return full tool config for consumers."""
         return self._tools.get(name)
 
     def get_tool_schema(self, name: str) -> Optional[dict]:
@@ -269,10 +269,10 @@ class ToolRegistry:
             }
         return summary
 
-    # ── Catalog / dashboard queries ───────────────────────────────────
+    # ── Catalog queries ────────────────────────────────────────────────
 
     def get_catalog(self) -> list[dict]:
-        """Return all tool metadata for dashboard marketplace."""
+        """Return all tool metadata for the tool catalog."""
         result = []
         for name, config in self._tools.items():
             meta = config.get("metadata", {})

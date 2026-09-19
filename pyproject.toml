@@ -6,8 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "anthropic>=0.89.0",
     "openai>=2.30.0",
-    "fastapi>=0.118.0",
-    "uvicorn>=0.32.0",
+    "textual>=3.0.0",
     "python-dotenv>=1.0.1",
     "jinja2>=3.1.6",
     "pydantic>=2.12.0",
@@ -30,7 +29,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["agents*", "tools*", "memory*", "dashboard*", "config*", "flows*", "profiles*"]
+include = ["agents*", "tools*", "memory*", "data*", "config*", "flows*", "profiles*", "tui*"]
 
 [build-system]
 requires = ["setuptools>=75.0"]

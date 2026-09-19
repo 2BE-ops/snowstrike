@@ -462,7 +462,7 @@ def build_compacted_messages(
 
 
 # ---------------------------------------------------------------------------
-# Public API for dashboard endpoints
+# Public API for consumers (TUI, CLI)
 # ---------------------------------------------------------------------------
 
 def get_compaction_state(eng_dir: str) -> dict:

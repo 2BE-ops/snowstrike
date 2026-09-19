@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.snowstrike
-    ports:
-      - "127.0.0.1:8080:8080"
+    tty: true
+    stdin_open: true
     env_file:
       - .env
     environment:
@@ -15,7 +15,6 @@ services:
     depends_on:
       - tool-runner
       - ghidra-mcp
-    restart: unless-stopped
     mem_limit: 4g
     cpus: 2
 

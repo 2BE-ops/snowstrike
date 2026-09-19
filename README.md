@@ -2,8 +2,8 @@
 
 SnowStrike is a Python multi-agent penetration testing runtime for authorized security testing.
 It combines an LLM-driven orchestrator, specialist task agents, a shared memory layer, a modular
-YAML-driven agent/tool registry, a DAG workflow engine (flows), and a FastAPI dashboard with a
-visual agent builder.
+YAML-driven agent/tool registry, a DAG workflow engine (flows), and a terminal UI (TUI)
+for live engagement monitoring.
 
 ## How It Works
 
@@ -28,9 +28,9 @@ repeatable sequences. See [docs/flows.md](docs/flows.md).
 - 8 agent templates (`agent-configs/templates/`)
 - 4 topology presets (`agent-configs/topologies/`)
 - Flow engine with 10 step types, event/schedule/manual triggers, and 3 example definitions
-- Dynamic `AgentRegistry` and `ToolRegistry` with hot-reload
-- Visual agent builder UI with Cytoscape.js graph editor
+- Dynamic `AgentRegistry` and `ToolRegistry`
 - Multi-provider model support through a unified client layer
+- Terminal UI built with Textual: engagement overview, tool catalog, flows, approvals
 
 Scope notes:
 
@@ -80,13 +80,11 @@ cleanly — the framework runs fine with a partial toolset.
 
 ### 4) Run
 
-Dashboard:
+TUI:
 
 ```bash
-python3 -m dashboard.app --port 8080
+python3 snowstrike_cli.py tui
 ```
-
-Then open `http://localhost:8080` (dashboard) or `http://localhost:8080/builder` (agent builder).
 
 CLI:
 
@@ -127,20 +125,6 @@ print(result)
 - `alerts`: lightweight monitoring and anomaly highlighting
 
 See [docs/agents.md](docs/agents.md) for the agent engineering guide.
-
-## Agent Builder
-
-The visual agent builder (`/builder`) provides:
-
-- **Canvas graph editor**: agents as nodes, handoff edges, topology visualization
-- **Config sidebar**: edit agent properties (model, tools, capabilities, handoff targets)
-- **Tool marketplace**: searchable catalog with binary availability indicators
-- **Topology presets**: hub-and-spoke, pipeline, swarm, red-blue
-- **Template library**: 8 pre-built agent templates for quick cloning
-- **Live validation**: cycle detection, binary checks, API key checks, prompt existence
-- **Hot-reload**: push config changes into the running orchestrator
-
-Builder API endpoints live at `/api/builder/` — see `dashboard/api/builder.py`.
 
 ## Modular Configuration
 
@@ -194,8 +178,8 @@ spec:
   compatible_agents: [recon, attack]
 ```
 
-Creating a new agent requires no code changes: add YAML to `agent-configs/agents/`, or use the
-builder UI, then call `POST /api/builder/reload` to hot-reload.
+Creating a new agent requires no code changes: add YAML to `agent-configs/agents/` and
+restart — the registry picks it up automatically.
 
 ## Configuration
 
@@ -253,9 +237,10 @@ snowstrike/
   profiles/                 # Model profile + metrics management
   agent-configs/            # Agent configs, templates, topology presets
   config/                   # Runtime config, model registry, JSON schemas
-  dashboard/                # FastAPI app, API routers, UI (templates/static)
+  tui/                      # Textual terminal UI
+  data/                     # Read-only engagement DB/file readers
   tool_runner/              # Optional remote tool-execution service
-  docker/                   # Dockerfiles (snowstrike, ghidra, toolrunner, base)
+  docker/                   # Dockerfiles (snowstrike, ghidra, toolrunner)
   tests/                    # Pytest suites
   engagements/              # Per-engagement runtime data (gitignored)
 ```
@@ -283,13 +268,13 @@ Not every file exists immediately; some are created lazily.
 
 ## Docker
 
-A three-service stack (dashboard + Ghidra MCP + tool runner):
+A three-service stack (SnowStrike TUI + Ghidra MCP + tool runner):
 
 ```bash
-docker compose up --build
+docker compose run --rm snowstrike
 ```
 
-The dashboard binds to `127.0.0.1:8080` only. Ghidra and tool-runner are internal services with
+The SnowStrike container is interactive (TUI). Ghidra and tool-runner are internal services with
 health checks. External binaries are expected to be available to the tool-runner image or
 network.
 
@@ -310,7 +295,7 @@ dynamic limits, orchestrator guards, and master profiles.
 ## Operational Boundaries
 
 - Many integrated security tools need elevated privileges or capabilities.
-- Dashboard and CLI operate on the same engagement state and are not isolated sandboxes.
+- TUI and CLI operate on the same engagement state and are not isolated sandboxes.
 - `STATE.json` is for coordination; SQLite is the better source for structured post-run facts.
 - Autonomous quality depends on strict JSON decisions from the orchestrator model.
 
