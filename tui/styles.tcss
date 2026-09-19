@@ -1,0 +1,226 @@
+/* SnowStrike TUI — frost-tactical dark theme */
+
+#root {
+    background: #0a0e14;
+}
+
+#banner {
+    dock: top;
+    height: 1;
+    padding: 0 2;
+    background: #0d1420 90%;
+    color: #cdd6f4;
+}
+
+#root {
+    background: #0a0e14;
+}
+
+#view-slot {
+    height: 1fr;
+}
+
+#view-slot > * {
+    height: 1fr;
+    background: #0a0e14;
+    padding: 0 1;
+}
+
+/* ── Panels & titles ─────────────────────────────────────────────── */
+
+.panel {
+    border: round #1f2a3a;
+    background: #0d131d;
+    padding: 0 1;
+    margin: 0 1 1 0;
+}
+
+.section-title {
+    color: #7dd3fc;
+    text-style: bold;
+    padding: 0 1;
+    margin: 0 0 0 0;
+}
+
+.hint {
+    color: #5b6b82;
+    padding: 0 1;
+}
+
+/* ── Stat cards row (overview) ───────────────────────────────────── */
+
+#stats-row {
+    height: 6;
+    margin: 1 0;
+}
+
+StatCard {
+    border: round #24344a;
+    background: #0d1420;
+    padding: 0 1;
+    width: 1fr;
+    margin: 0 1 0 0;
+    content-align: center middle;
+}
+
+StatCard .stat-label {
+    color: #5b6b82;
+    text-style: none;
+    width: 1fr;
+    text-align: center;
+}
+
+StatCard .stat-value {
+    color: #7dd3fc;
+    text-style: bold;
+    width: 1fr;
+    text-align: center;
+}
+
+StatCard.severity-critical { border: round #b91c1c; }
+StatCard.severity-critical .stat-value { color: #f87171; }
+StatCard.severity-high { border: round #b45309; }
+StatCard.severity-high .stat-value { color: #fb923c; }
+StatCard.accent { border: round #155e75; }
+
+/* ── Data tables ─────────────────────────────────────────────────── */
+
+DataTable {
+    background: #0d131d;
+    border: round #1f2a3a;
+    margin: 0 1 1 0;
+}
+
+DataTable > .datatable--cursor {
+    background: #155e75 40%;
+}
+
+DataTable > .datatable--header {
+    background: #0d1420;
+    color: #7dd3fc;
+    text-style: bold;
+}
+
+/* ── Tabbed areas ────────────────────────────────────────────────── */
+
+TabbedContent {
+    height: 1fr;
+}
+
+ContentSwitcher {
+    height: 1fr;
+}
+
+Tabs {
+    background: #0a0e14;
+}
+
+Tabs > Tab {
+    padding: 0 2;
+}
+
+Tabs > .underline--bar {
+    background: #7dd3fc;
+}
+
+/* ── Logs / console panes ────────────────────────────────────────── */
+
+RichLog {
+    background: #070b10;
+    border: round #1f2a3a;
+    padding: 0 1;
+    margin: 0 1 0 0;
+}
+
+#log-filter {
+    margin: 0 1 0 0;
+}
+
+/* ── Modal dialogs ───────────────────────────────────────────────── */
+
+.modal-screen {
+    align: center middle;
+    background: #0a0e14 75%;
+}
+
+.modal {
+    width: 64;
+    max-height: 80%;
+    border: thick #155e75;
+    background: #0d1420;
+    padding: 1 2;
+}
+
+.modal-title {
+    color: #7dd3fc;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+.modal Input {
+    margin: 0 0 1 0;
+}
+
+.modal-buttons {
+    align-horizontal: right;
+    margin-top: 1;
+}
+
+/* ── Approvals ───────────────────────────────────────────────────── */
+
+#approval-detail {
+    height: 8;
+    border: round #7f1d1d;
+    background: #140d0d;
+    padding: 0 1;
+    margin: 0 1 1 0;
+}
+
+/* ── Misc ────────────────────────────────────────────────────────── */
+
+Markdown {
+    background: #0d131d;
+    border: round #1f2a3a;
+    padding: 0 2;
+    margin: 0 1 0 0;
+}
+
+Input {
+    border: round #24344a;
+}
+
+Input:focus {
+    border: round #7dd3fc;
+}
+
+Select {
+    border: round #24344a;
+}
+
+Select:focus {
+    border: round #7dd3fc;
+}
+
+#nav-hint {
+    dock: bottom;
+    height: 1;
+    color: #5b6b82;
+    padding: 0 2;
+    background: #0d1420;
+}
+
+.empty-note {
+    color: #5b6b82;
+    padding: 1 2;
+    text-align: center;
+    width: 1fr;
+}
+
+/* ── Fixed-height sub-tables / consoles ──────────────────────────── */
+
+#model-table { height: 10; }
+#workspace-table { height: 7; }
+#flow-console { height: 10; }
+#approval-log { height: 9; }
+#rawlog-table { height: 10; }
+#feed-log { height: 1fr; }

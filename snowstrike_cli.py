@@ -42,6 +42,13 @@ from profiles.comparison import EngagementComparison
 logger = logging.getLogger("snowstrike.cli")
 
 
+def cmd_tui(args):
+    """Launch the Textual terminal UI."""
+    from tui import run
+
+    run()
+
+
 def cmd_list_presets(args):
     """List available prompt presets."""
     pm = ProfileManager()
@@ -649,6 +656,9 @@ def build_parser():
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
+    # tui
+    subparsers.add_parser("tui", help="Launch the SnowStrike terminal UI")
+
     # list-presets
     subparsers.add_parser("list-presets", help="List available prompt presets")
 
@@ -766,6 +776,7 @@ def main():
 
     # Dispatch
     commands = {
+        "tui": cmd_tui,
         "list-presets": cmd_list_presets,
         "list-model-configs": cmd_list_model_configs,
         "list-profiles": cmd_list_profiles,
