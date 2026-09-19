@@ -9,7 +9,7 @@ WORKDIR /app
 COPY pyproject.toml ./
 RUN pip install --no-cache-dir . 2>/dev/null; \
     pip install --no-cache-dir \
-    anthropic openai textual python-dotenv jinja2 pydantic httpx filelock pyyaml croniter
+    anthropic openai "textual<8" python-dotenv jinja2 pydantic httpx filelock pyyaml croniter
 
 # ── Application code ────────────────────────────────────────────────────────
 COPY . .
