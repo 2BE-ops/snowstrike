@@ -1,0 +1,40 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: metasploit_module
+  category: exploitation
+  requires_root: false
+  binary: msfconsole
+  passive: false
+spec:
+  description: Run a specific Metasploit module with given options. Builds and executes
+    an rc file.
+  input_schema:
+    type: object
+    properties:
+      module:
+        type: string
+        description: Module path (e.g., 'exploit/windows/smb/ms17_010_eternalblue').
+      options:
+        type: object
+        description: 'Module options as key-value pairs (e.g., {''RHOSTS'': ''10.0.0.1'',
+          ''RPORT'': 445}).'
+      payload:
+        type: string
+        description: Payload to use with exploit modules.
+      payload_options:
+        type: object
+        description: 'Payload options as key-value pairs (e.g., {''LHOST'': ''10.0.0.5'',
+          ''LPORT'': 4444}).'
+      action:
+        type: string
+        description: Module action (for auxiliary modules).
+      extra_args:
+        type: string
+        description: Additional msfconsole arguments.
+    required:
+    - module
+  timeout: 420
+  cumulative_ceiling: 600
+  compatible_agents:
+  - attack

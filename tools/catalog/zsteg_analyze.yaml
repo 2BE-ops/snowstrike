@@ -1,0 +1,33 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: zsteg_analyze
+  category: steganography
+  requires_root: false
+  binary: zsteg
+  passive: false
+spec:
+  flag_map:
+  - param: all
+    flag: -a
+    transform: bool
+  - param: image_file
+    flag: null
+  compatible_agents:
+  - forensics
+  description: PNG and BMP steganography detection using zsteg. Detect hidden data
+    in LSB, MSB, and other bit planes.
+  input_schema:
+    type: object
+    properties:
+      image_file:
+        type: string
+        description: Path to PNG or BMP image file.
+      all:
+        type: boolean
+        description: 'Try all known methods. Default: false.'
+      extra_args:
+        type: string
+        description: Additional zsteg arguments.
+    required:
+    - image_file

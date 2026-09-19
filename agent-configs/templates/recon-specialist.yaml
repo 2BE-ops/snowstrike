@@ -1,0 +1,42 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: recon-specialist
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Recon Specialist
+  description: Port scanning, service enumeration, subdomain discovery
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 3
+  prompt:
+    template: recon
+  tools:
+  - nmap_scan
+  - nmap_advanced
+  - rustscan_scan
+  - masscan_scan
+  - amass_enum
+  - subfinder_scan
+  - httpx_probe
+  - whatweb_scan
+  capabilities:
+    skills:
+    - port_scanning
+    - service_fingerprinting
+    - dns_enumeration
+    - subdomain_discovery
+    produces:
+    - open_ports
+    - service_versions
+    - hostnames
+    - subdomains
+    - network_map
+    requires:
+    - target_hosts
+  handoff_targets:
+  - webapp
+  - attack
+  - orchestrator

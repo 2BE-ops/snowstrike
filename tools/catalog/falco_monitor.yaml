@@ -1,0 +1,33 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: falco_monitor
+  category: runtime_security
+  binary: falco
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Runtime security monitoring using Falco. Detects abnormal behavior in containers
+    and hosts using rule-based detection.
+  input_schema:
+    type: object
+    properties:
+      rules_file:
+        type: string
+        description: Path to custom Falco rules file.
+      duration:
+        type: integer
+        description: Monitoring duration in seconds.
+      output_format:
+        type: string
+        enum:
+        - json
+        - text
+        description: 'Output format. Default: json.'
+      extra_args:
+        type: string
+        description: Additional Falco arguments.
+    required: []
+  compatible_agents:
+  - cloud

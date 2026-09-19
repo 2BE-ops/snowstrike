@@ -1,0 +1,24 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_list_data_items
+  category: data_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /list_data_items
+  http_method: GET
+spec:
+  description: List defined data labels and their values. Supports pagination.
+  input_schema:
+    type: object
+    properties:
+      offset:
+        type: integer
+        description: 'Start index. Default: 0.'
+      limit:
+        type: integer
+        description: 'Max items. Default: 100.'
+    required: []
+  compatible_agents:
+  - ghidra

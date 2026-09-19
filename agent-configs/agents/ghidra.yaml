@@ -1,0 +1,78 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: ghidra
+  version: 1
+  created: '2026-04-09T20:00:00Z'
+  author: system
+spec:
+  display_name: Ghidra RE Analyst
+  description: Deep binary reverse engineering via persistent Ghidra session (ghidra-mcp).
+    Decompilation, cross-references, call graphs, annotation, and scripting.
+  agent_class: agents.ghidra_agent.GhidraAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 40
+  max_concurrent: 1
+  prompt:
+    template: ghidra
+  tools:
+  # Session Management
+  - ghidra_check_connection
+  - ghidra_load_program
+  - ghidra_run_analysis
+  - ghidra_save_program
+  - ghidra_get_metadata
+  # Function Analysis
+  - ghidra_list_functions
+  - ghidra_decompile_function
+  - ghidra_batch_decompile
+  - ghidra_get_function_callers
+  - ghidra_get_function_callees
+  - ghidra_get_function_call_graph
+  - ghidra_analyze_function_complete
+  - ghidra_get_entry_points
+  # Data & Memory
+  - ghidra_list_segments
+  - ghidra_list_strings
+  - ghidra_search_byte_patterns
+  - ghidra_disassemble_function
+  - ghidra_list_data_items
+  # Symbols
+  - ghidra_list_imports
+  - ghidra_list_exports
+  - ghidra_list_namespaces
+  - ghidra_get_function_count
+  # Cross-References
+  - ghidra_get_xrefs_to
+  - ghidra_get_xrefs_from
+  # Annotation & Documentation
+  - ghidra_rename_function
+  - ghidra_set_decompiler_comment
+  - ghidra_set_function_prototype
+  - ghidra_rename_variables
+  # Scripting
+  - ghidra_run_script
+  - ghidra_run_script_inline
+  capabilities:
+    skills:
+    - decompilation
+    - function_analysis
+    - cross_reference_analysis
+    - binary_annotation
+    - call_graph_analysis
+    - string_analysis
+    - import_export_analysis
+    - data_type_management
+    - ghidra_scripting
+    produces:
+    - decompiled_functions
+    - call_graphs
+    - cross_references
+    - annotated_binaries
+    - vulnerability_annotations
+    requires:
+    - binary_targets
+  handoff_targets:
+  - binary
+  - attack
+  - orchestrator

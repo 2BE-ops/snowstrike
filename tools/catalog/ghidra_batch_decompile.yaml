@@ -1,0 +1,25 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_batch_decompile
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /batch_decompile
+  http_method: POST
+spec:
+  description: Decompile multiple functions at once. More efficient than individual
+    calls.
+  input_schema:
+    type: object
+    properties:
+      names:
+        type: string
+        description: Comma-separated function names to decompile.
+      addresses:
+        type: string
+        description: Comma-separated function addresses to decompile.
+    required: []
+  compatible_agents:
+  - ghidra

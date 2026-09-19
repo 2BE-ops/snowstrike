@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: red-team-operator
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Red Team Operator
+  description: Full attack chain agent — recon through exploitation
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: attack
+  tools:
+  - nmap_scan
+  - httpx_probe
+  - gobuster_scan
+  - nuclei_scan
+  - sqlmap_scan
+  - searchsploit_search
+  - msfconsole_run
+  - msfvenom_generate
+  - hydra_attack
+  - generic_command
+  capabilities:
+    skills:
+    - port_scanning
+    - vulnerability_scanning
+    - exploit_execution
+    - privilege_escalation
+    produces:
+    - open_ports
+    - web_vulnerabilities
+    - shell_access
+    - root_access
+    requires:
+    - target_hosts
+  handoff_targets:
+  - orchestrator

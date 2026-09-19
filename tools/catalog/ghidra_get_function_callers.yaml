@@ -1,0 +1,24 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_get_function_callers
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /get_function_callers
+  http_method: GET
+spec:
+  description: Get all functions that call the specified function.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Function name.
+      address:
+        type: string
+        description: Function address in hex.
+    required: []
+  compatible_agents:
+  - ghidra

@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nikto_scan
+  category: web_scanning
+  requires_root: false
+  binary: nikto
+  passive: false
+spec:
+  description: Web server vulnerability scanner using Nikto. Checks for dangerous
+    files, outdated software, and misconfigurations.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL or host:port.
+      port:
+        type: integer
+        description: Target port if not in URL.
+      ssl:
+        type: boolean
+        description: Force SSL mode.
+      tuning:
+        type: string
+        description: Scan tuning options (e.g., '123bde' for specific test types).
+      plugins:
+        type: string
+        description: Specific plugins to run.
+      maxtime:
+        type: integer
+        description: Maximum scan time in seconds.
+      extra_args:
+        type: string
+        description: Additional nikto arguments.
+    required:
+    - target
+  timeout: 360
+  cumulative_ceiling: 600
+  compatible_agents:
+  - webapp

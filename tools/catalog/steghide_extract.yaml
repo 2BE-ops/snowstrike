@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: steghide_extract
+  category: stego
+  binary: steghide
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Steganography extraction tool using Steghide. Extract hidden data from JPEG and
+    BMP images and WAV/AU audio files.
+  input_schema:
+    type: object
+    properties:
+      stego_file:
+        type: string
+        description: Path to stego file (image or audio).
+      passphrase:
+        type: string
+        description: Passphrase for extraction. Use empty string for no passphrase.
+      extract_file:
+        type: string
+        description: Path to write extracted data to.
+      extra_args:
+        type: string
+        description: Additional Steghide arguments.
+    required:
+    - stego_file
+  compatible_agents:
+  - forensics

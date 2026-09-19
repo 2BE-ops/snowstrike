@@ -1,0 +1,17 @@
+description: ''
+created_date: '2026-04-09'
+author: user
+tags: []
+roles:
+  orchestrator: grok-4.20-reasoning
+  tool_calling: grok-4-fast
+  compaction: grok-4.20-reasoning
+  recon: grok-4-1-fast-non-reasoning
+  webapp: grok-4.20-reasoning
+  browser: grok-4.20-reasoning
+  attack: grok-4.20-reasoning
+  binary: grok-4.20-reasoning
+  cloud: grok-4.20-reasoning
+  forensics: grok-4.20-reasoning
+  osint: grok-4.20-reasoning
+  reporting: grok-4.20-reasoning

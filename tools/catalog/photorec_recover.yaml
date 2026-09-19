@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: photorec_recover
+  category: file_recovery
+  binary: photorec
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    File recovery tool using PhotoRec. Recover lost files from disk images or devices.
+  input_schema:
+    type: object
+    properties:
+      device:
+        type: string
+        description: Path to device or disk image.
+      file_types:
+        type: string
+        description: Comma-separated file types to recover.
+      output_dir:
+        type: string
+        description: Output directory for recovered files.
+      extra_args:
+        type: string
+        description: Additional PhotoRec arguments.
+    required:
+    - device
+  compatible_agents:
+  - forensics

@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: browser_navigate
+  category: browser_automation
+  requires_root: false
+  binary: python3
+  passive: false
+spec:
+  description: Navigate headless Chrome to a URL and return page content. Supports
+    waiting for selectors or time delays.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: URL to navigate to.
+      wait_for:
+        type: string
+        description: CSS selector or time (e.g., '2s') to wait for after navigation.
+      timeout:
+        type: integer
+        description: 'Navigation timeout in seconds. Default: 30.'
+      user_agent:
+        type: string
+        description: Custom User-Agent string.
+    required:
+    - url
+  compatible_agents:
+  - browser

@@ -1,0 +1,24 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_search_byte_patterns
+  category: data_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /search_byte_patterns
+  http_method: POST
+spec:
+  description: >-
+    Search for byte patterns in memory. Useful for finding signatures, magic bytes,
+    or shellcode.
+  input_schema:
+    type: object
+    properties:
+      pattern:
+        type: string
+        description: Hex byte pattern to search for (e.g., '48 89 e5' or '\x48\x89\xe5').
+    required:
+    - pattern
+  compatible_agents:
+  - ghidra

@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: webapp-scanner
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: WebApp Scanner
+  description: Directory bruteforce, vulnerability scanning, injection testing
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 2
+  prompt:
+    template: webapp
+  tools:
+  - gobuster_scan
+  - feroxbuster_scan
+  - ffuf_scan
+  - nikto_scan
+  - nuclei_scan
+  - sqlmap_scan
+  - dalfox_scan
+  - katana_crawl
+  capabilities:
+    skills:
+    - directory_bruteforce
+    - vulnerability_scanning
+    - sqli_testing
+    - xss_testing
+    produces:
+    - accessible_endpoints
+    - web_vulnerabilities
+    - injection_points
+    requires:
+    - target_hosts
+    - open_ports
+    - web_services
+  handoff_targets:
+  - attack
+  - orchestrator

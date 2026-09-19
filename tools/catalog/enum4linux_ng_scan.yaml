@@ -1,0 +1,43 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: enum4linux_ng_scan
+  category: smb_enumeration
+  requires_root: false
+  binary: enum4linux-ng
+  passive: false
+spec:
+  flag_map:
+  - param: username
+    flag: -u
+  - param: password
+    flag: -p
+  - param: all_enum
+    flag: -A
+    transform: bool
+  - param: target
+    flag: null
+  compatible_agents:
+  - recon
+  description: SMB and RPC enumeration using enum4linux-ng. Enumerates shares, users,
+    groups, policies, and more.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      username:
+        type: string
+        description: Username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      all_enum:
+        type: boolean
+        description: Run all enumeration modules (-A).
+      extra_args:
+        type: string
+        description: Additional enum4linux-ng arguments.
+    required:
+    - target

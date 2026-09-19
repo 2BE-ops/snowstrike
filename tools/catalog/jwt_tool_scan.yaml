@@ -1,0 +1,43 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: jwt_tool_scan
+  category: jwt
+  binary: jwt_tool
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    JWT security analysis and exploitation using jwt_tool. Tests for common JWT vulnerabilities.
+  input_schema:
+    type: object
+    properties:
+      token:
+        type: string
+        description: JWT token to analyze.
+      mode:
+        type: string
+        enum:
+        - scan
+        - exploit
+        description: 'Operation mode. Default: scan.'
+      exploit_type:
+        type: string
+        enum:
+        - none
+        - alg
+        - kid
+        - jku
+        - x5u
+        - jwk
+        description: Exploit type for exploit mode.
+      secret:
+        type: string
+        description: Secret key or wordlist path for cracking.
+      extra_args:
+        type: string
+        description: Additional jwt_tool arguments.
+    required:
+    - token
+  compatible_agents:
+  - webapp

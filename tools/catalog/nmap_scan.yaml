@@ -1,0 +1,63 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nmap_scan
+  category: network_scanning
+  requires_root: true
+  binary: nmap
+  passive: false
+spec:
+  description: Run an Nmap port scan against a target. Supports common scan types
+    including SYN scan, connect scan, version detection, and OS detection.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP, hostname, or CIDR range.
+      ports:
+        type: string
+        description: 'Port specification (e.g., ''1-1000'', ''80,443'', ''T:80,U:53'').
+          Default: top 1000.'
+      scan_type:
+        type: string
+        enum:
+        - syn
+        - connect
+        - udp
+        - ack
+        - fin
+        - xmas
+        - 'null'
+        - ping
+        description: 'Scan type. Default: syn.'
+      version_detection:
+        type: boolean
+        description: 'Enable service version detection (-sV). Default: true.'
+      os_detection:
+        type: boolean
+        description: 'Enable OS detection (-O). Default: false.'
+      scripts:
+        type: string
+        description: NSE scripts to run (e.g., 'default', 'vuln', 'http-enum').
+      timing:
+        type: integer
+        minimum: 0
+        maximum: 5
+        description: 'Timing template T0-T5. Default: 4.'
+      extra_args:
+        type: string
+        description: Additional raw nmap arguments.
+      output_format:
+        type: string
+        enum:
+        - normal
+        - xml
+        - greppable
+        description: 'Output format. Default: normal.'
+    required:
+    - target
+  timeout: 420
+  cumulative_ceiling: 900
+  compatible_agents:
+  - recon

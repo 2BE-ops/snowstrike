@@ -1,0 +1,53 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: commix_scan
+  category: web_scanning
+  requires_root: false
+  binary: commix
+  passive: false
+spec:
+  flag_map:
+  - param: url
+    flag: --url
+  - param: data
+    flag: --data
+  - param: cookie
+    flag: --cookie
+  - param: technique
+    flag: --technique
+  - param: level
+    flag: --level
+  - const: --batch
+  compatible_agents:
+  - webapp
+  description: Automated command injection detection and exploitation using Commix.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL with injectable parameter.
+      data:
+        type: string
+        description: POST data.
+      cookie:
+        type: string
+        description: HTTP cookie string.
+      technique:
+        type: string
+        enum:
+        - classic
+        - eval
+        - time
+        description: Injection technique.
+      level:
+        type: integer
+        minimum: 1
+        maximum: 3
+        description: 'Test level (1-3). Default: 1.'
+      extra_args:
+        type: string
+        description: Additional commix arguments.
+    required:
+    - url

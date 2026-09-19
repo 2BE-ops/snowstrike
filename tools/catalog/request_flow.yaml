@@ -1,0 +1,34 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: request_flow
+  category: workflow
+  requires_root: false
+  passive: true
+  transport: internal
+spec:
+  description: >
+    Request execution of a predefined flow pipeline. Use when a multi-step
+    coordinated process is needed that goes beyond a single agent's capabilities.
+    The flow will be picked up by the trigger dispatcher and executed asynchronously.
+  input_schema:
+    type: object
+    properties:
+      flow_name:
+        type: string
+        description: "Name of the flow to trigger (e.g., 'credential-spray', 'osint-recon-report')"
+      inputs:
+        type: object
+        description: "Input parameters for the flow (depends on flow definition)"
+      priority:
+        type: string
+        enum: ["critical", "high", "medium", "low"]
+        description: "Priority level for the flow request"
+      reason:
+        type: string
+        description: "Why this flow should be triggered — include context about what was discovered"
+    required:
+      - flow_name
+      - reason
+  compatible_agents:
+    - "all"

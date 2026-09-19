@@ -1,0 +1,55 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: osint
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: OSINT Investigator
+  description: Open source intelligence gathering, email harvesting, credential leak
+    search, and social engineering recon
+  agent_class: agents.osint_agent.OSINTAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: osint
+  tools:
+  - sherlock_search
+  - shodan_search
+  - trufflehog_scan
+  - recon_ng_run
+  - censys_search
+  - theharvester_scan
+  - spiderfoot_scan
+  - haveibeenpwned_check
+  - subjack_scan
+  capabilities:
+    skills:
+    - email_harvesting
+    - domain_intelligence
+    - employee_enumeration
+    - credential_leak_search
+    - technology_fingerprinting
+    - social_engineering_recon
+    - username_investigation
+    - github_dorking
+    - breach_analysis
+    - subdomain_takeover
+    - people_search
+    produces:
+    - email_addresses
+    - employee_names
+    - leaked_credentials
+    - technology_stack
+    - social_profiles
+    - document_metadata
+    - takeover_candidates
+    requires:
+    - target_domains
+    - target_organization
+  handoff_targets:
+  - recon
+  - webapp
+  - orchestrator

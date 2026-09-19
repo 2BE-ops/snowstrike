@@ -1,0 +1,29 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: one_gadget_find
+  category: binary_analysis
+  requires_root: false
+  binary: one_gadget
+  passive: false
+spec:
+  flag_map:
+  - param: libc_path
+    flag: null
+  compatible_agents:
+  - binary
+  description: Find one-shot RCE gadgets (one_gadget / magic gadgets) in a libc binary.
+  input_schema:
+    type: object
+    properties:
+      libc_path:
+        type: string
+        description: Path to the libc binary.
+      constraints:
+        type: boolean
+        description: 'Show constraint details for each gadget. Default: true.'
+      extra_args:
+        type: string
+        description: Additional one_gadget arguments.
+    required:
+    - libc_path

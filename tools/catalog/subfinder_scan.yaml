@@ -1,0 +1,43 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: subfinder_scan
+  category: dns_enumeration
+  requires_root: false
+  binary: subfinder
+  passive: false
+spec:
+  flag_map:
+  - param: domain
+    flag: -d
+  - param: sources
+    flag: -sources
+  - param: recursive
+    flag: -recursive
+    transform: bool
+  - param: max_time
+    flag: -max-time
+  compatible_agents:
+  - recon
+  description: Fast passive subdomain discovery using Subfinder. Queries multiple
+    data sources for subdomains.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      sources:
+        type: string
+        description: Comma-separated list of sources to use.
+      recursive:
+        type: boolean
+        description: Enable recursive subdomain enumeration.
+      max_time:
+        type: integer
+        description: Maximum time in minutes.
+      extra_args:
+        type: string
+        description: Additional subfinder arguments.
+    required:
+    - domain

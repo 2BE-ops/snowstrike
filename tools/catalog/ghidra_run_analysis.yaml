@@ -1,0 +1,19 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_run_analysis
+  category: session_mgmt
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /run_analysis
+  http_method: POST
+spec:
+  description: Trigger Ghidra auto-analysis on the currently loaded program. Run this
+    after loading a binary and before querying functions or decompiling.
+  input_schema:
+    type: object
+    properties: {}
+    required: []
+  compatible_agents:
+  - ghidra

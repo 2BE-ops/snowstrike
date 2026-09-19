@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: browser_network_monitor
+  category: network
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Monitor network requests made by a page using headless Chrome. Captures XHR, fetch,
+    and other request types.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: URL to monitor.
+      duration:
+        type: integer
+        description: 'Duration in seconds to monitor. Default: 10.'
+      filter_type:
+        type: string
+        enum:
+        - xhr
+        - fetch
+        - all
+        description: 'Filter requests by type. Default: all.'
+    required:
+    - url
+  compatible_agents:
+  - browser

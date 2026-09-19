@@ -1,0 +1,66 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: bloodhound_query
+  category: ad_attack_path
+  binary: cypher-shell
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Query collected BloodHound data to find Active Directory attack paths and privilege
+    escalation routes. Analyzes previously collected BloodHound JSON data to identify:
+    shortest paths to Domain Admin, kerberoastable users, AS-REP roastable accounts,
+    unconstrained delegation, ACL abuse paths, and other AD privilege escalation vectors.
+    Requires prior collection by the recon agent.
+  input_schema:
+    type: object
+    properties:
+      data_dir:
+        type: string
+        description: Path to directory containing BloodHound JSON/ZIP data from collection
+          phase.
+      query_type:
+        type: string
+        enum:
+        - find_da_paths
+        - kerberoastable
+        - asreproastable
+        - unconstrained_delegation
+        - high_value_targets
+        - owned_to_da
+        - domain_trusts
+        - custom
+        description: >-
+          Type of query to run. 'find_da_paths' finds shortest paths to Domain Admin.
+          'kerberoastable' lists Kerberoastable service accounts. 'asreproastable'
+          lists AS-REP roastable accounts. 'unconstrained_delegation' finds hosts
+          with unconstrained delegation. 'high_value_targets' identifies high-value
+          targets. 'owned_to_da' finds paths from owned principals to DA. 'domain_trusts'
+          maps domain trust relationships. 'custom' runs a custom Cypher query.
+      start_node:
+        type: string
+        description: >-
+          Starting principal for path queries (e.g., 'JSMITH@CORP.LOCAL'). Used with
+          owned_to_da and find_da_paths.
+      custom_query:
+        type: string
+        description: >-
+          Custom Cypher query for BloodHound Neo4j database. Only used when query_type
+          is 'custom'.
+      neo4j_uri:
+        type: string
+        description: 'Neo4j connection URI. Default: bolt://localhost:7687.'
+      neo4j_user:
+        type: string
+        description: 'Neo4j username. Default: neo4j.'
+      neo4j_password:
+        type: string
+        description: Neo4j password.
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required:
+    - query_type
+  compatible_agents:
+  - attack

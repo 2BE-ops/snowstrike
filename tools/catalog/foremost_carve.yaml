@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: foremost_carve
+  category: file_carving
+  requires_root: false
+  binary: foremost
+  passive: false
+spec:
+  flag_map:
+  - param: image_file
+    flag: -i
+  - param: types
+    flag: -t
+  - param: output_dir
+    flag: -o
+  compatible_agents:
+  - forensics
+  description: File carving tool using Foremost. Extract files from disk images based
+    on headers, footers, and data structures.
+  input_schema:
+    type: object
+    properties:
+      image_file:
+        type: string
+        description: Path to disk image or file to carve.
+      types:
+        type: string
+        description: File types to carve (e.g., 'jpg,png,pdf,doc,zip').
+      output_dir:
+        type: string
+        description: Output directory for carved files.
+      extra_args:
+        type: string
+        description: Additional Foremost arguments.
+    required:
+    - image_file

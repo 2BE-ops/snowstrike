@@ -1,0 +1,59 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: netexec_scan
+  category: network_scanning
+  requires_root: false
+  binary: netexec
+  passive: false
+spec:
+  flag_map:
+  - param: protocol
+    flag: null
+    position: head
+  - param: target
+    flag: null
+    position: head
+  - param: username
+    flag: -u
+  - param: password
+    flag: -p
+  - param: module
+    flag: -M
+  compatible_agents:
+  - recon
+  description: Network enumeration and exploitation tool using NetExec. Supports SMB,
+    SSH, LDAP, WinRM, and more.
+  input_schema:
+    type: object
+    properties:
+      protocol:
+        type: string
+        enum:
+        - smb
+        - ssh
+        - ldap
+        - winrm
+        - rdp
+        - mssql
+        - ftp
+        - wmi
+        description: 'Protocol to use. Default: smb.'
+      target:
+        type: string
+        description: Target IP, hostname, or CIDR range.
+      username:
+        type: string
+        description: Username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      module:
+        type: string
+        description: NetExec module to run (e.g., 'spider_plus', 'enum_shares').
+      extra_args:
+        type: string
+        description: Additional netexec arguments.
+    required:
+    - protocol
+    - target

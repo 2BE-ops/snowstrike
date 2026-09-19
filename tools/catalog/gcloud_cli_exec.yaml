@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: gcloud_cli_exec
+  category: cloud_cli
+  binary: gcloud
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Execute Google Cloud CLI commands. Interact with GCP services like compute, IAM,
+    storage, and more.
+  input_schema:
+    type: object
+    properties:
+      service:
+        type: string
+        description: GCP service (e.g., 'compute', 'iam', 'storage', 'container',
+          'sql').
+      command:
+        type: string
+        description: Service command (e.g., 'instances list', 'service-accounts list').
+      extra_args:
+        type: string
+        description: Additional gcloud CLI arguments.
+    required:
+    - service
+    - command
+  compatible_agents:
+  - cloud

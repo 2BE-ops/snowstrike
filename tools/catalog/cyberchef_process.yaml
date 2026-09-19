@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: cyberchef_process
+  category: crypto
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Data processing and cryptographic operations using CyberChef recipes. Encode,
+    decode, encrypt, decrypt, and transform data.
+  input_schema:
+    type: object
+    properties:
+      input_data:
+        type: string
+        description: Input data to process.
+      operations:
+        type: string
+        description: >-
+          Description of operations to apply (e.g., 'base64 decode then XOR with key
+          0x42').
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required:
+    - input_data
+    - operations
+  compatible_agents:
+  - forensics

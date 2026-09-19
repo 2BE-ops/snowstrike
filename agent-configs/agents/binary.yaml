@@ -1,0 +1,60 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: binary
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Binary/RE Analyst
+  description: Binary analysis, reverse engineering, exploit development, and firmware
+    analysis
+  agent_class: agents.binary_agent.BinaryREAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: binary
+  tools:
+  - checksec_check
+  - strings_extract
+  - radare2_analyze
+  - gdb_analyze
+  - binwalk_analyze
+  - ropgadget_find
+  - objdump_disasm
+  - readelf_analyze
+  - angr_analyze
+  - libc_database_lookup
+  - pwninit_setup
+  - one_gadget_find
+  - pwntools_run
+  - xxd_dump
+  - upx_pack
+  capabilities:
+    skills:
+    - binary_analysis
+    - reverse_engineering
+    - debugging
+    - rop_chain_generation
+    - format_string_exploitation
+    - heap_exploitation
+    - shellcode_generation
+    - firmware_analysis
+    - symbolic_execution
+    - exploit_development
+    - binary_patching
+    - packing_unpacking
+    produces:
+    - exploitable_binaries
+    - custom_exploits
+    - shellcode
+    - binary_vulnerabilities
+    - rop_chains
+    - firmware_secrets
+    requires:
+    - binary_targets
+  handoff_targets:
+  - attack
+  - ghidra
+  - orchestrator

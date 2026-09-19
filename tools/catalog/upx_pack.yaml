@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: upx_pack
+  category: binary_analysis
+  requires_root: false
+  binary: upx
+  passive: false
+spec:
+  flag_map:
+  - param: decompress
+    flag: -d
+    transform: bool
+  - param: output
+    flag: -o
+  - param: file_path
+    flag: null
+  compatible_agents:
+  - binary
+  description: Pack or unpack executables using UPX (Ultimate Packer for eXecutables).
+  input_schema:
+    type: object
+    properties:
+      file_path:
+        type: string
+        description: Path to the executable file.
+      decompress:
+        type: boolean
+        description: 'Decompress (unpack) instead of compress. Default: false.'
+      output:
+        type: string
+        description: Output file path.
+      extra_args:
+        type: string
+        description: Additional UPX arguments.
+    required:
+    - file_path

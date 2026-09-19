@@ -1,0 +1,40 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: sherlock_search
+  category: osint
+  requires_root: false
+  binary: sherlock
+  passive: true
+spec:
+  description: 'Search for usernames across social networks using Sherlock. IMPORTANT:
+    Only accepts human usernames (e.g., ''john.smith'', ''jdoe2024''). Do NOT pass
+    IP addresses, domain names, or URLs as usernames — Sherlock searches social media
+    profiles, not network infrastructure.'
+  input_schema:
+    type: object
+    properties:
+      username:
+        type: string
+        description: Username to search for.
+      sites:
+        type: array
+        items:
+          type: string
+        description: Specific sites to check (e.g., ['twitter', 'github', 'reddit']).
+      timeout:
+        type: integer
+        description: 'Request timeout in seconds. Default: 60.'
+      print_found:
+        type: boolean
+        description: 'Only print found results. Default: true.'
+      output_file:
+        type: string
+        description: Path to output file.
+      extra_args:
+        type: string
+        description: Additional sherlock arguments.
+    required:
+    - username
+  compatible_agents:
+  - osint

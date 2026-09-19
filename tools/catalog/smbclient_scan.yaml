@@ -1,0 +1,35 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: smbclient_scan
+  category: smb_enum
+  binary: smbclient
+  requires_root: false
+  passive: false
+spec:
+  description: SMB client for listing shares and interacting with SMB services.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      share:
+        type: string
+        description: Share name to connect to (e.g., 'C$', 'IPC$').
+      username:
+        type: string
+        description: Username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      command:
+        type: string
+        description: Command to execute (e.g., 'ls', 'get file.txt').
+      extra_args:
+        type: string
+        description: Additional smbclient arguments.
+    required:
+    - target
+  compatible_agents:
+  - recon

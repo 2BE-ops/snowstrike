@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: paramspider_scan
+  category: web_scanning
+  requires_root: false
+  binary: paramspider
+  passive: true
+spec:
+  flag_map:
+  - param: domain
+    flag: -d
+  - param: exclude
+    flag: --exclude
+  compatible_agents:
+  - webapp
+  description: Parameter spider for discovering URL parameters from web archives.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      exclude:
+        type: string
+        description: Comma-separated file extensions to exclude (e.g., 'png,jpg,woff').
+      extra_args:
+        type: string
+        description: Additional paramspider arguments.
+    required:
+    - domain

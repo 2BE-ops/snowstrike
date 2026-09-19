@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: zap_scan
+  category: proxy
+  binary: zap-cli
+  requires_root: false
+  passive: false
+spec:
+  description: OWASP ZAP web application security scan using zap-cli.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL.
+      scan_type:
+        type: string
+        enum:
+        - quick
+        - full
+        - ajax
+        description: 'Scan type. Default: quick.'
+      extra_args:
+        type: string
+        description: Additional zap-cli arguments.
+    required:
+    - target
+  compatible_agents:
+  - webapp

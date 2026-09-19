@@ -1,0 +1,52 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: msfvenom_generate
+  category: payload_gen
+  binary: msfvenom
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Generate payloads using msfvenom. Supports various formats, platforms, and encoders.
+  input_schema:
+    type: object
+    properties:
+      payload:
+        type: string
+        description: Payload name (e.g., 'windows/meterpreter/reverse_tcp').
+      lhost:
+        type: string
+        description: Listening host IP.
+      lport:
+        type: integer
+        description: Listening port.
+      format:
+        type: string
+        description: Output format (e.g., 'exe', 'elf', 'raw', 'python', 'c').
+      encoder:
+        type: string
+        description: Encoder to use (e.g., 'x86/shikata_ga_nai').
+      iterations:
+        type: integer
+        description: Number of encoding iterations.
+      platform:
+        type: string
+        description: Target platform (e.g., 'windows', 'linux').
+      arch:
+        type: string
+        description: Target architecture (e.g., 'x86', 'x64').
+      output_file:
+        type: string
+        description: Output file path.
+      bad_chars:
+        type: string
+        description: Bad characters to avoid (e.g., '\x00\x0a\x0d').
+      extra_args:
+        type: string
+        description: Additional msfvenom arguments.
+    required:
+    - payload
+    - format
+  compatible_agents:
+  - attack

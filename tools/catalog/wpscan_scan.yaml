@@ -1,0 +1,62 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: wpscan_scan
+  category: web_scanning
+  requires_root: false
+  binary: wpscan
+  passive: false
+spec:
+  flag_map:
+  - param: target
+    flag: --url
+  - param: enumerate
+    flag: -e
+  - param: api_token
+    flag: --api-token
+  - param: passwords
+    flag: -P
+  - param: usernames
+    flag: -U
+  - param: threads
+    flag: -t
+  - param: detection_mode
+    flag: --detection-mode
+  compatible_agents:
+  - webapp
+  description: WordPress vulnerability scanner. Enumerates plugins, themes, users,
+    and checks for known vulnerabilities.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target WordPress URL.
+      enumerate:
+        type: string
+        description: 'Enumeration options: ''vp'' (vulnerable plugins), ''ap'' (all
+          plugins), ''u'' (users), ''t'' (themes), etc.'
+      api_token:
+        type: string
+        description: WPScan API token for vulnerability data.
+      passwords:
+        type: string
+        description: Path to password wordlist for brute force.
+      usernames:
+        type: string
+        description: Comma-separated usernames or path to file.
+      threads:
+        type: integer
+        description: Number of threads.
+      detection_mode:
+        type: string
+        enum:
+        - mixed
+        - passive
+        - aggressive
+        description: 'Detection mode. Default: mixed.'
+      extra_args:
+        type: string
+        description: Additional wpscan arguments.
+    required:
+    - target

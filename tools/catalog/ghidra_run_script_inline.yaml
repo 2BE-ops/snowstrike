@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_run_script_inline
+  category: scripting
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /run_script_inline
+  http_method: POST
+spec:
+  description: >-
+    Execute inline Ghidra script code (Java or Python). Use for ad-hoc queries not
+    covered by other tools.
+  input_schema:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Script code to execute.
+      language:
+        type: string
+        description: 'Script language: ''java'' or ''python''. Default: ''java''.'
+    required:
+    - code
+  compatible_agents:
+  - ghidra

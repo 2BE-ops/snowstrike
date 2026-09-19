@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: pacu_run
+  category: cloud_scanning
+  requires_root: false
+  binary: pacu
+  passive: false
+spec:
+  flag_map:
+  - param: module
+    flag: --module
+  compatible_agents:
+  - cloud
+  description: AWS exploitation framework using Pacu. Run modules for IAM privilege
+    escalation, EC2 enumeration, and more.
+  input_schema:
+    type: object
+    properties:
+      module:
+        type: string
+        description: Pacu module to run (e.g., 'iam__privesc_scan', 'ec2__enum', 's3__bucket_finder').
+      extra_args:
+        type: string
+        description: Additional Pacu arguments.
+    required:
+    - module

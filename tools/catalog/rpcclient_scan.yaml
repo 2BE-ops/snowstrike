@@ -1,0 +1,42 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: rpcclient_scan
+  category: smb_enumeration
+  requires_root: false
+  binary: rpcclient
+  passive: false
+spec:
+  flag_map:
+  - param: username
+    flag: -U
+  - param: password
+    flag: --password
+  - param: command
+    flag: -c
+  - param: target
+    flag: null
+  compatible_agents:
+  - recon
+  description: RPC client enumeration using rpcclient. Enumerates domain users, groups,
+    and shares via MS-RPC.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      username:
+        type: string
+        description: Username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      command:
+        type: string
+        description: RPC command to execute (e.g., 'enumdomusers', 'enumdomgroups').
+      extra_args:
+        type: string
+        description: Additional rpcclient arguments.
+    required:
+    - target

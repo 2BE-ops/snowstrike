@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SnowStrike Agent Configuration",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "snowstrike/v1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Agent"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "description": "Unique agent identifier"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Configuration version number"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "author": {
+          "type": "string",
+          "default": "system"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["display_name", "description", "tools", "capabilities"],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "description": "Human-readable agent name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Agent purpose and specialization"
+        },
+        "agent_class": {
+          "type": "string",
+          "description": "Python class path (e.g., agents.recon_agent.ReconAgent). Defaults to BaseAgent if omitted."
+        },
+        "model": {
+          "type": "string",
+          "description": "Default model for this agent (overridable per-engagement)"
+        },
+        "max_turns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 30,
+          "description": "Maximum tool_use turns before forced stop"
+        },
+        "max_concurrent": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 1,
+          "description": "Maximum concurrent instances of this agent"
+        },
+        "prompt": {
+          "type": "object",
+          "properties": {
+            "template": {
+              "type": "string",
+              "description": "Prompt template name (loads agents/prompts/<template>.md)"
+            },
+            "blocks": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Composable prompt sections (future)"
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of tool names from tool catalog"
+        },
+        "capabilities": {
+          "type": "object",
+          "required": ["produces", "requires"],
+          "properties": {
+            "skills": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Agent skill descriptors"
+            },
+            "produces": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Data types this agent can produce"
+            },
+            "requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Data types this agent needs as input"
+            }
+          }
+        },
+        "handoff_targets": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Agent types this agent can hand off to"
+        }
+      }
+    }
+  }
+}

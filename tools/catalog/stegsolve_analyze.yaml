@@ -1,0 +1,25 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: stegsolve_analyze
+  category: stego
+  binary: java
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Image steganography analysis using StegSolve (Java). Apply various filters and
+    bit-plane analysis to detect hidden data.
+  input_schema:
+    type: object
+    properties:
+      image_file:
+        type: string
+        description: Path to image file to analyze.
+      extra_args:
+        type: string
+        description: Additional StegSolve arguments.
+    required:
+    - image_file
+  compatible_agents:
+  - forensics

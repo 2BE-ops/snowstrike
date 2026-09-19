@@ -1,0 +1,29 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: update_shared_state
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Update a section of the shared state with new data. Used to share information
+    between agents.
+  input_schema:
+    type: object
+    properties:
+      section:
+        type: string
+        description: Section key to update (e.g., 'credentials', 'webapp_info', 'custom').
+      data:
+        type: object
+        description: Arbitrary JSON data to store in the section.
+      merge:
+        type: boolean
+        description: If true, merge with existing data instead of replacing. Default
+          true.
+    required:
+    - section
+    - data
+  compatible_agents:
+  - all

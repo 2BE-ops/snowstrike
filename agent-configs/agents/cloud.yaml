@@ -1,0 +1,58 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: cloud
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Cloud Auditor
+  description: Cloud infrastructure auditing for AWS, Azure, and GCP misconfigurations
+    and IAM weaknesses
+  agent_class: agents.cloud_agent.CloudAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: cloud
+  tools:
+  - prowler_scan
+  - trivy_scan
+  - kube_hunter_scan
+  - checkov_scan
+  - kube_bench_scan
+  - scout_suite_scan
+  - pacu_run
+  - docker_bench_scan
+  - falco_monitor
+  - kubectl_exec
+  - aws_cli_exec
+  - azure_cli_exec
+  - gcloud_cli_exec
+  capabilities:
+    skills:
+    - aws_audit
+    - azure_audit
+    - gcp_audit
+    - iam_analysis
+    - container_scanning
+    - k8s_assessment
+    - iac_scanning
+    - runtime_monitoring
+    - service_mesh_analysis
+    - policy_evaluation
+    - cloud_exploitation
+    produces:
+    - cloud_misconfigurations
+    - iam_weaknesses
+    - exposed_storage
+    - cloud_credentials
+    - container_vulnerabilities
+    - k8s_weaknesses
+    - iac_violations
+    requires:
+    - cloud_credentials
+    - cloud_endpoints
+  handoff_targets:
+  - attack
+  - orchestrator

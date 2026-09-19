@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: get_raw_output
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Retrieve the full raw output from a previously executed tool. Use this when the
+    compacted summary is insufficient and you need to see the complete tool output
+    for deeper analysis. Provide the tool name and optionally a keyword to search
+    for in the output.
+  input_schema:
+    type: object
+    properties:
+      tool_name:
+        type: string
+        description: Name of the tool whose output to retrieve (e.g., 'nmap_scan',
+          'gobuster_scan').
+      search_keyword:
+        type: string
+        description: >-
+          Optional keyword to filter output lines (case-insensitive). Returns only
+          matching lines.
+      max_lines:
+        type: integer
+        description: Maximum lines to return. Default 200.
+    required:
+    - tool_name
+  compatible_agents:
+  - all

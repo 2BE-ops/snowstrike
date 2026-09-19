@@ -1,0 +1,26 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_analyze_function_complete
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /analyze_function_complete
+  http_method: GET
+spec:
+  description: >-
+    Comprehensive analysis of a single function: decompilation, xrefs, callers, callees,
+    variables, and complexity metrics.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Function name.
+      address:
+        type: string
+        description: Function address in hex.
+    required: []
+  compatible_agents:
+  - ghidra

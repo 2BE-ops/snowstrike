@@ -1,0 +1,19 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_check_connection
+  category: session_mgmt
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /check_connection
+  http_method: GET
+spec:
+  description: Verify the ghidra-mcp server is running and a program is loaded. Call
+    this first before any other ghidra tool.
+  input_schema:
+    type: object
+    properties: {}
+    required: []
+  compatible_agents:
+  - ghidra

@@ -1,0 +1,39 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: arjun_scan
+  category: param_discovery
+  binary: arjun
+  requires_root: false
+  passive: false
+spec:
+  description: HTTP parameter discovery using Arjun. Finds hidden GET/POST/JSON parameters.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL.
+      method:
+        type: string
+        enum:
+        - GET
+        - POST
+        - JSON
+        description: 'HTTP method. Default: GET.'
+      headers:
+        type: string
+        description: 'Custom headers as ''Key: Value'' string.'
+      wordlist:
+        type: string
+        description: Path to custom parameter wordlist.
+      threads:
+        type: integer
+        description: 'Number of threads. Default: 5.'
+      extra_args:
+        type: string
+        description: Additional arjun arguments.
+    required:
+    - url
+  compatible_agents:
+  - webapp

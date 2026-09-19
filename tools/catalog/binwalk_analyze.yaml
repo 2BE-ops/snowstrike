@@ -1,0 +1,52 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: binwalk_analyze
+  category: binary_analysis
+  requires_root: false
+  binary: binwalk
+  passive: false
+spec:
+  flag_map:
+  - param: extract
+    flag: -e
+    transform: bool
+  - param: entropy
+    flag: -E
+    transform: bool
+  - param: raw
+    flag: -R
+  - param: extract_dir
+    flag: -C
+  - param: file
+    flag: null
+  compatible_agents:
+  - binary
+  description: Analyze firmware images using Binwalk. Scans for embedded files, executables,
+    and compressed archives.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to firmware/binary file.
+      extract:
+        type: boolean
+        description: Automatically extract identified files.
+      signature:
+        type: boolean
+        description: 'Scan for file signatures. Default: true.'
+      entropy:
+        type: boolean
+        description: Calculate file entropy (detect encryption/compression).
+      raw:
+        type: string
+        description: Search for raw byte sequence.
+      extract_dir:
+        type: string
+        description: Output directory for extracted files.
+      extra_args:
+        type: string
+        description: Additional binwalk arguments.
+    required:
+    - file

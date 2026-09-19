@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SnowStrike Topology Configuration",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "snowstrike/v1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Topology"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["orchestrator", "agents", "edges"],
+      "properties": {
+        "orchestrator": {
+          "type": "string",
+          "description": "Name of the orchestrator agent"
+        },
+        "agents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of agent names in this topology"
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "type"],
+            "properties": {
+              "from": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "array", "items": { "type": "string" } }
+                ]
+              },
+              "to": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "array", "items": { "type": "string" } }
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": ["dispatch", "handoff", "direct_handoff"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

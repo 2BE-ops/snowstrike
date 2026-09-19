@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowStrike AI v7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/vendor/xterm.css">
+</head>
+<body>
+    <!-- ═══ HEADER ═══ -->
+    <header id="header">
+        <div class="header-left">
+            <span class="brand">SnowStrike</span>
+            <span class="brand-version">v7</span>
+            <span class="header-sep">|</span>
+            <span id="headerTarget" class="header-target">—</span>
+        </div>
+        <div class="header-center">
+            <!-- Stats summary (compact) -->
+            <div class="stats-summary" id="statsSummary">
+                <span class="stat-chip"><span class="stat-num" id="statHosts">0</span> hosts</span>
+                <span class="stat-chip"><span class="stat-num" id="statServices">0</span> svc</span>
+                <span class="stat-chip sev-critical"><span class="stat-num" id="statCritical">0</span> crit</span>
+                <span class="stat-chip sev-high"><span class="stat-num" id="statHigh">0</span> high</span>
+                <span class="stat-chip"><span class="stat-num" id="statMedium">0</span> med</span>
+                <span class="stat-chip"><span class="stat-num" id="statLow">0</span> low</span>
+                <span class="stat-chip"><span class="stat-num" id="statCreds">0</span> creds</span>
+                <span class="stat-chip cost-chip" style="margin-left:8px;border-left:1px solid rgba(0,0,0,0.1);padding-left:12px"><span class="stat-num" id="statCost" style="color:#D4764E">$0.00</span> cost</span>
+                <span class="stat-chip cost-chip"><span class="stat-num" id="statTokens" style="color:#888;font-size:11px">0</span> tok</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- View Toggle -->
+            <div class="view-toggle" id="viewToggle">
+                <button class="view-btn" data-view="conversation" title="Conversation only">&#x2261;</button>
+                <button class="view-btn active" data-view="split" title="Split view">&#x25A7;</button>
+                <button class="view-btn" data-view="graph" title="Graph only">&#x25C9;</button>
+            </div>
+            <span class="header-sep">|</span>
+            <div class="mode-toggle" id="modeToggle">
+                <button class="mode-btn active" data-mode="live">Live</button>
+                <button class="mode-btn" data-mode="replay">Replay</button>
+            </div>
+            <a href="/builder" class="icon-btn" title="Agent Builder" style="text-decoration:none;color:inherit;font-size:16px">&#9881;&#xFE0E;</a>
+            <button id="settingsToggle" class="icon-btn" title="Model Settings">&#9881;</button>
+            <button id="sidebarToggle" class="icon-btn" title="Engagements">&#9776;</button>
+        </div>
+    </header>
+
+    <!-- ═══ REPLAY BAR ═══ -->
+    <div id="replayBar" class="replay-bar hidden">
+        <span class="replay-label">Replay</span>
+        <button id="replayStart" class="replay-btn" title="Jump to start">|&lt;</button>
+        <button id="replayStepBack" class="replay-btn" title="Step back">&lt;</button>
+        <button id="replayToggle" class="replay-btn replay-play" title="Play/Pause">Play</button>
+        <button id="replayStepFwd" class="replay-btn" title="Step forward">&gt;</button>
+        <button id="replayEnd" class="replay-btn" title="Jump to end">&gt;|</button>
+        <input type="range" id="replaySlider" class="replay-slider" min="0" max="100" value="0">
+        <select id="replaySpeed" class="replay-speed">
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="4" selected>4x</option>
+            <option value="8">8x</option>
+            <option value="16">16x</option>
+        </select>
+        <span id="replayCounter" class="replay-counter">0 / 0</span>
+        <span id="replayTimestamp" class="replay-timestamp">--:--:--</span>
+    </div>
+
+    <!-- ═══ MAIN CANVAS ═══ -->
+    <div id="canvas" class="canvas" data-view="split">
+
+        <!-- ═══ LEFT: Conversation Panel ═══ -->
+        <div class="conversation-panel">
+            <div id="conversationStream" class="conversation-stream">
+                <div class="conversation-inner" id="conversationInner">
+                    <div class="context-compaction-bar">
+                        <div id="contextStatus" class="context-status" title="Estimated orchestrator context usage">
+                            <span id="contextStatusRing" class="context-status-ring" style="--context-angle: 0deg;"></span>
+                            <div class="context-status-copy">
+                                <span id="contextStatusPercent" class="context-status-percent">0%</span>
+                                <span class="context-status-label">context</span>
+                                <span id="contextStatusModel" class="context-status-model">—</span>
+                            <span id="contextStatusProvider" class="context-status-provider" data-provider="" style="display:none"></span>
+                            </div>
+                        </div>
+                        <div id="compactionControl" class="compaction-control" title="Context Compaction">
+                            <label class="compaction-toggle">
+                                <input type="checkbox" id="compactionSwitch">
+                                <span class="compaction-slider"></span>
+                            </label>
+                            <span class="compaction-label">Compact</span>
+                            <span id="compactionStatus" class="compaction-status"></span>
+                        </div>
+                    </div>
+
+                    <!-- Inline Stats -->
+                    <div class="inline-stats" id="inlineStats">
+                        <span class="stat-pill"><span class="num" id="isHosts">0</span> hosts</span>
+                        <span class="stat-pill"><span class="num" id="isServices">0</span> services</span>
+                        <span class="stat-sep">|</span>
+                        <span class="stat-pill sev-critical"><span class="num" id="isCritical">0</span> critical</span>
+                        <span class="stat-pill sev-high"><span class="num" id="isHigh">0</span> high</span>
+                        <span class="stat-pill sev-medium"><span class="num" id="isMedium">0</span> medium</span>
+                        <span class="stat-pill sev-low"><span class="num" id="isLow">0</span> low</span>
+                        <span class="stat-sep">|</span>
+                        <span class="stat-pill"><span class="num" id="isCreds">0</span> creds</span>
+                        <span class="stat-pill"><span class="num" id="isTools">0</span> tools</span>
+                    </div>
+
+                    <!-- Autonomous Run Card (sticky above messages) -->
+                    <div id="autoRunCard" class="auto-run-card hidden">
+                        <span class="auto-run-indicator"></span>
+                        <div class="auto-run-info">
+                            <div class="auto-run-title" id="autoRunText">Autonomous pentest running</div>
+                            <div class="auto-run-phase" id="autoRunPhase"></div>
+                        </div>
+                        <span id="autoRunTimer" class="auto-run-timer"></span>
+                    </div>
+
+                    <section id="missionPlanCard" class="mission-plan-card hidden">
+                        <div class="mission-plan-header">
+                            <div>
+                                <div class="mission-plan-kicker">Plan</div>
+                                <div class="mission-plan-title">Engagement Plan</div>
+                            </div>
+                            <div id="missionPlanMeta" class="mission-plan-meta"></div>
+                        </div>
+                        <div id="missionPlanBody" class="mission-plan-body"></div>
+                    </section>
+
+                    <!-- Messages will be injected here by conversation.js -->
+                    <div class="placeholder" id="conversationPlaceholder">
+                        Start a conversation with the orchestrator, or run an autonomous pentest.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="chat-input-area-inner">
+                    <div class="action-chips" id="actionChips">
+                        <button class="action-chip" data-action="autonomous">Run autonomous</button>
+                        <button class="action-chip" data-action="recon">Run recon</button>
+                        <button class="action-chip" data-action="report">Generate report</button>
+                    </div>
+                    <div class="chat-attachments" id="chatAttachments" style="display:none"></div>
+                    <div class="chat-input-wrapper">
+                        <button type="button" id="chatAttachBtn" class="chat-attach-btn" title="Attach file for analysis">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.49"/>
+                            </svg>
+                        </button>
+                        <input type="file" id="chatFileInput" class="sr-only" multiple accept=".txt,.log,.json,.xml,.csv,.pcap,.cap,.bin,.exe,.dll,.so,.elf,.pdf,.png,.jpg,.yaml,.yml,.conf,.cfg,.ini,.sh,.py,.ps1,.bat,.cmd,.zip,.tar,.gz,.7z,.md,.html,.js,.php,.asp,.jsp,.war,.jar,.apk,.dex,.pem,.crt,.key,.der,.p12">
+                        <textarea id="chatInput" placeholder="Message the orchestrator..." rows="1"></textarea>
+                        <button id="chatSend" class="chat-send-btn" disabled>&uarr;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ RIGHT: Graph Panel ═══ -->
+        <div class="graph-panel">
+            <!-- Alerts Rail (visually separate from chat) -->
+            <div class="alerts-rail" id="alertsRail">
+                <div class="alerts-rail-header">
+                    <span class="alerts-rail-title">Alerts</span>
+                    <span class="alerts-badge" id="alertsBadge">0</span>
+                    <button class="alerts-clear-btn" id="alertsClear" title="Clear alerts">&times;</button>
+                </div>
+                <div class="alerts-rail-body" id="alertsBody">
+                    <div class="alerts-empty">No alerts yet</div>
+                </div>
+            </div>
+
+            <!-- Filter Row -->
+            <div class="graph-filters" id="graphFilters">
+                <span class="filter-pill active" data-filter="hosts">Hosts</span>
+                <span class="filter-pill active" data-filter="services">Services</span>
+                <span class="filter-pill active" data-filter="vulns">Vulns</span>
+                <span class="filter-pill active" data-filter="agents">Agents</span>
+                <span class="filter-pill" data-filter="trails">Trails</span>
+            </div>
+
+            <!-- Graph Canvas -->
+            <div class="graph-canvas-area" id="graphContainer">
+                <div id="cy"></div>
+
+                <!-- Node Detail Panel -->
+                <div id="nodeDetail" class="node-detail hidden">
+                    <div class="node-detail-header">
+                        <span id="nodeDetailTitle">Node Details</span>
+                        <button id="nodeDetailClose" class="icon-btn">&times;</button>
+                    </div>
+                    <div id="nodeDetailBody" class="node-detail-body"></div>
+                </div>
+
+                <!-- Graph Controls -->
+                <div class="graph-controls">
+                    <button id="graphFit" class="graph-btn" title="Fit">&#x229E;</button>
+                    <button id="graphRelayout" class="graph-btn" title="Re-layout">&#x21BB;</button>
+                    <button id="graphToggleAgents" class="graph-btn active" title="Toggle agents">&#x2B21;</button>
+                </div>
+
+                <!-- Trail Legend -->
+                <div class="trail-legend" id="trailLegend"></div>
+            </div>
+
+            <!-- Resize Handle -->
+            <div class="resize-handle" id="resizeHandle"></div>
+
+            <!-- Context Drawer -->
+            <div class="context-drawer" id="contextDrawer">
+                <div class="drawer-tabs">
+                    <button class="drawer-tab active" data-tab="artifacts">Artifacts</button>
+                    <button class="drawer-tab" data-tab="terminal">Terminal</button>
+                    <button class="drawer-tab" data-tab="convos">Prompts</button>
+                </div>
+                <div class="drawer-content" id="drawerContent">
+                    <!-- Artifacts Tab -->
+                    <div id="tab-artifacts" class="active">
+                        <div class="tab-bar" style="margin-bottom:8px;">
+                            <button class="tab-btn active" data-subtab="vulns">Vulns</button>
+                            <button class="tab-btn" data-subtab="creds">Creds</button>
+                            <button class="tab-btn" data-subtab="loot">Loot</button>
+                            <button class="tab-btn" data-subtab="hosts">Hosts</button>
+                        </div>
+                        <div id="subtab-vulns" class="tab-content active">
+                            <table class="data-table"><thead><tr>
+                                <th>Sev</th><th>Title</th><th>Host</th><th>CVE</th><th>Agent</th><th>Time</th>
+                            </tr></thead><tbody id="vulns-tbody"></tbody></table>
+                            <div id="vulns-empty" class="placeholder">No vulnerabilities yet.</div>
+                        </div>
+                        <div id="subtab-creds" class="tab-content">
+                            <table class="data-table"><thead><tr>
+                                <th>User</th><th>Type</th><th>Hash</th><th>Host</th><th>Source</th><th>OK</th>
+                            </tr></thead><tbody id="creds-tbody"></tbody></table>
+                            <div id="creds-empty" class="placeholder">No credentials yet.</div>
+                        </div>
+                        <div id="subtab-loot" class="tab-content">
+                            <table class="data-table"><thead><tr>
+                                <th>Type</th><th>Description</th><th>Path</th><th>Time</th>
+                            </tr></thead><tbody id="loot-tbody"></tbody></table>
+                            <div id="loot-empty" class="placeholder">No loot yet.</div>
+                        </div>
+                        <div id="subtab-hosts" class="tab-content">
+                            <table class="data-table"><thead><tr>
+                                <th>IP</th><th>Hostname</th><th>OS</th><th>Services</th><th>Seen</th>
+                            </tr></thead><tbody id="hosts-tbody"></tbody></table>
+                            <div id="hosts-empty" class="placeholder">No hosts yet.</div>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Tab -->
+                    <div id="tab-terminal">
+                        <div id="terminalContent" class="terminal-panel-content"></div>
+                    </div>
+
+                    <!-- Conversations/Prompts Tab -->
+                    <div id="tab-convos">
+                        <div id="agentConvos" class="agent-convos">
+                            <div class="placeholder">No conversations saved yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ RAW LOG MODAL ═══ -->
+    <div id="rawModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="rawModalTitle">Raw Output</span>
+                <button id="rawModalClose" class="icon-btn">&times;</button>
+            </div>
+            <pre id="rawModalBody" class="modal-body"></pre>
+        </div>
+    </div>
+
+    <!-- ═══ RIGHT SIDEBAR ═══ -->
+    <div id="sidebar" class="sidebar hidden">
+        <div class="sidebar-header">
+            <span>Engagements</span>
+            <div class="sidebar-header-actions">
+                <button id="sidebarNewEngagement" class="sidebar-create-btn" type="button">+ New</button>
+                <button id="sidebarClose" class="icon-btn" type="button">&times;</button>
+            </div>
+        </div>
+        <div class="sidebar-body">
+            <div id="sidebarCreatePanel" class="sidebar-create-panel hidden">
+                <form id="sidebarCreateForm" class="sidebar-create-form">
+                    <label class="sidebar-field">
+                        <span class="sidebar-field-label">Target</span>
+                        <input type="text" id="sidebarNewTarget" class="sidebar-input" placeholder="Target IP or hostname" required>
+                    </label>
+                    <label class="sidebar-field">
+                        <span class="sidebar-field-label">Name</span>
+                        <input type="text" id="sidebarNewName" class="sidebar-input" placeholder="Engagement name (optional)">
+                    </label>
+                    <label class="sidebar-field">
+                        <span class="sidebar-field-label">Methodology</span>
+                        <select id="sidebarNewMethodology" class="sidebar-input">
+                            <option value="standard">Standard</option>
+                            <option value="webapp">Web Application</option>
+                            <option value="network">Network</option>
+                            <option value="cloud">Cloud</option>
+                            <option value="ctf">CTF</option>
+                        </select>
+                    </label>
+                    <button id="sidebarCreateSubmit" class="sidebar-submit-btn" type="submit">Start Engagement</button>
+                </form>
+            </div>
+            <div id="sidebarCreateFeedback" class="sidebar-feedback hidden"></div>
+            <div id="sidebarBody" class="sidebar-list"></div>
+        </div>
+    </div>
+    <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+    <!-- ═══ SETTINGS PANEL ═══ -->
+    <div id="settingsPanel" class="sp-overlay hidden">
+        <div class="sp-chrome">
+            <div class="sp-header">
+                <div class="sp-header-left">
+                    <span class="sp-title">Settings</span>
+                    <span class="sp-subtitle" id="spSubtitle">Models</span>
+                </div>
+                <button id="settingsClose" class="icon-btn" title="Close">&times;</button>
+            </div>
+            <!-- Tabs -->
+            <div class="sp-tabs" id="spTabs">
+                <button class="sp-tab active" data-tab="models">Models</button>
+                <button class="sp-tab" data-tab="prompts">Prompts</button>
+                <button class="sp-tab" data-tab="master">Master Profiles</button>
+                <button class="sp-tab" data-tab="history">History &amp; Costs</button>
+            </div>
+            <div class="sp-body">
+
+                <!-- ─── MODELS TAB ─── -->
+                <div id="sp-models" class="sp-pane active">
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <span class="sp-section-title">Per-Role Model Assignment</span>
+                            <span class="sp-section-desc">Override models for each agent role in the active engagement.</span>
+                        </div>
+                        <form id="modelConfigForm" class="settings-form">
+                            <div id="modelRoleRows"></div>
+                            <div class="sp-form-actions">
+                                <button type="button" id="settingsReset" class="form-btn">Reset All</button>
+                                <button type="submit" class="form-btn sp-btn-accent">Save to Engagement</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="sp-divider"></div>
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <div class="sp-section-row">
+                                <div>
+                                    <span class="sp-section-title">Saved Model Configs</span>
+                                    <span class="sp-section-desc">Saved model configurations. Click to load, or create new ones.</span>
+                                </div>
+                                <button type="button" id="spNewModelProfile" class="form-btn sp-btn-accent sp-btn-sm">+ New Config</button>
+                            </div>
+                        </div>
+                        <div id="spModelProfilesList"></div>
+                        <!-- New Model Profile Form (hidden by default) -->
+                        <div id="spModelProfileForm" class="sp-create-form hidden">
+                            <div class="sp-form-row">
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Config Name</span>
+                                    <input type="text" id="spNewModelName" class="sp-input" placeholder="e.g. my-budget-setup">
+                                </label>
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Description</span>
+                                    <input type="text" id="spNewModelDesc" class="sp-input" placeholder="Short description">
+                                </label>
+                            </div>
+                            <p class="sp-form-hint">Saves the current per-role model selections above as a named config.</p>
+                            <div class="sp-form-actions">
+                                <button type="button" id="spCancelModelProfile" class="form-btn">Cancel</button>
+                                <button type="button" id="spSaveModelProfile" class="form-btn sp-btn-accent">Save Model Config</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── PROMPTS TAB ─── -->
+                <div id="sp-prompts" class="sp-pane">
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <div class="sp-section-row">
+                                <div>
+                                    <span class="sp-section-title">Prompt Profiles</span>
+                                    <span class="sp-section-desc">Each profile contains per-agent system prompts as markdown files.</span>
+                                </div>
+                                <button type="button" id="spNewPromptProfile" class="form-btn sp-btn-accent sp-btn-sm">+ New Profile</button>
+                            </div>
+                        </div>
+                        <div id="spPromptProfilesList"></div>
+                        <div id="spNewPromptForm" class="sp-create-form hidden">
+                            <div class="sp-form-row">
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Profile Name</span>
+                                    <input type="text" id="spNewPromptName" class="sp-input" placeholder="e.g. aggressive-recon">
+                                </label>
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Copy From</span>
+                                    <select id="spNewPromptSource" class="sp-select"></select>
+                                </label>
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Description</span>
+                                    <input type="text" id="spNewPromptDesc" class="sp-input" placeholder="Short description">
+                                </label>
+                            </div>
+                            <div class="sp-form-actions">
+                                <button type="button" id="spCancelPromptProfile" class="form-btn">Cancel</button>
+                                <button type="button" id="spSavePromptProfile" class="form-btn sp-btn-accent">Create Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sp-divider"></div>
+                    <!-- Prompt Editor (shown when editing a profile's agent prompt) -->
+                    <div id="spPromptEditor" class="sp-section hidden">
+                        <div class="sp-section-header">
+                            <div class="sp-section-row">
+                                <div>
+                                    <span class="sp-section-title" id="spPromptEditorTitle">Edit Prompt</span>
+                                    <span class="sp-section-desc" id="spPromptEditorDesc"></span>
+                                </div>
+                                <button type="button" id="spPromptEditorClose" class="form-btn">Close Editor</button>
+                            </div>
+                        </div>
+                        <div class="sp-prompt-tabs" id="spPromptAgentTabs"></div>
+                        <textarea id="spPromptEditorArea" class="sp-prompt-textarea" rows="20"></textarea>
+                        <div class="sp-form-actions">
+                            <button type="button" id="spPromptEditorSave" class="form-btn sp-btn-accent">Save Prompt</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── MASTER PROFILES TAB ─── -->
+                <div id="sp-master" class="sp-pane">
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <div class="sp-section-row">
+                                <div>
+                                    <span class="sp-section-title">Master Profiles</span>
+                                    <span class="sp-section-desc">Combine a model config + prompt profile, with optional per-agent overrides.</span>
+                                </div>
+                                <button type="button" id="spNewMasterProfile" class="form-btn sp-btn-accent sp-btn-sm">+ New Master Profile</button>
+                            </div>
+                        </div>
+                        <div id="spActiveMasterProfile" class="sp-active-badge hidden"></div>
+                        <div id="spMasterProfilesList"></div>
+                        <div id="spNewMasterForm" class="sp-create-form hidden">
+                            <div class="sp-form-row">
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Profile Name</span>
+                                    <input type="text" id="spNewMasterName" class="sp-input" placeholder="e.g. budget-aggressive">
+                                </label>
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Model Config</span>
+                                    <select id="spNewMasterModelConfig" class="sp-select"></select>
+                                </label>
+                                <label class="sp-field">
+                                    <span class="sp-field-label">Prompt Profile</span>
+                                    <select id="spNewMasterPromptProfile" class="sp-select"></select>
+                                </label>
+                            </div>
+                            <label class="sp-field" style="margin-top:8px">
+                                <span class="sp-field-label">Description</span>
+                                <input type="text" id="spNewMasterDesc" class="sp-input" placeholder="Short description">
+                            </label>
+                            <p class="sp-form-hint">Per-agent overrides can be configured after creation.</p>
+                            <div class="sp-form-actions">
+                                <button type="button" id="spCancelMasterProfile" class="form-btn">Cancel</button>
+                                <button type="button" id="spSaveMasterProfile" class="form-btn sp-btn-accent">Create Master Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sp-divider"></div>
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <span class="sp-section-title">Save Current Config As...</span>
+                            <span class="sp-section-desc">Save this engagement's current effective config as a reusable profile.</span>
+                        </div>
+                        <div class="sp-form-row">
+                            <select id="spSaveAsType" class="sp-select">
+                                <option value="model_config">Model Config</option>
+                                <option value="prompt_profile">Prompt Profile</option>
+                                <option value="master_profile">Master Profile</option>
+                            </select>
+                            <input type="text" id="spSaveAsName" class="sp-input" placeholder="Name">
+                            <button type="button" id="spSaveAsBtn" class="form-btn sp-btn-accent">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── HISTORY TAB ─── -->
+                <div id="sp-history" class="sp-pane">
+                    <div class="sp-section">
+                        <div class="sp-section-header">
+                            <span class="sp-section-title">Profile Run History &amp; Costs</span>
+                            <span class="sp-section-desc">Historical runs aggregated by master profile.</span>
+                        </div>
+                        <div id="spHistoryList">
+                            <div class="sp-empty">Loading history...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ EXPERIMENTS PANEL (removed) ═══ -->
+
+    <!-- ═══ TESTING LAB (hidden — Ctrl+Shift+T or triple-click v7) ═══ -->
+    <div id="testingLab" class="tl-overlay hidden">
+        <div class="tl-chrome">
+            <div class="tl-header">
+                <div class="tl-header-left">
+                    <span class="tl-title">Testing Lab</span>
+                    <span class="tl-subtitle">Model A/B Testing</span>
+                </div>
+                <button id="testingLabClose" class="icon-btn" title="Close (Ctrl+Shift+T)">&times;</button>
+            </div>
+            <div class="tl-tabs">
+                <button class="tl-tab active" data-tab="models">Model Configs</button>
+                <button class="tl-tab" data-tab="results">Results</button>
+                <button class="tl-tab" data-tab="costs">Cost Estimator</button>
+            </div>
+            <div class="tl-body">
+                <!-- Model Configs Pane -->
+                <div id="tl-models" class="tl-pane active">
+                    <div class="tl-pane-header">
+                        <span class="tl-pane-title">Model Configurations</span>
+                        <span class="tl-pane-desc">Named sets of model assignments per agent role.</span>
+                    </div>
+                    <div id="tl-models-body"></div>
+                </div>
+
+                <!-- Results Pane -->
+                <div id="tl-results" class="tl-pane">
+                    <div class="tl-pane-header">
+                        <span class="tl-pane-title">Results &amp; Comparison</span>
+                        <span class="tl-pane-desc">Compare engagement runs.</span>
+                    </div>
+                    <div class="tl-filter-row">
+                        <label class="tl-filter">
+                            <span>Target IP</span>
+                            <input type="text" id="tl-results-target" class="tl-input" placeholder="e.g. 10.10.10.x">
+                        </label>
+                        <label class="tl-filter">
+                            <span>CTF Tag</span>
+                            <select id="tl-results-tag" class="tl-input">
+                                <option value="">All</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="insane">Insane</option>
+                            </select>
+                        </label>
+                        <button class="form-btn tl-filter-btn" onclick="HexTestingLab._refreshResults && HexTestingLab._refreshResults()">Filter</button>
+                    </div>
+                    <div id="tl-results-body"></div>
+                </div>
+
+                <!-- Cost Estimator Pane -->
+                <div id="tl-costs" class="tl-pane">
+                    <div class="tl-pane-header">
+                        <span class="tl-pane-title">Cost Estimator</span>
+                        <span class="tl-pane-desc">Estimate per-engagement cost for each model configuration.</span>
+                    </div>
+                    <div class="tl-filter-row">
+                        <label class="tl-filter">
+                            <span>Tokens per Agent</span>
+                            <input type="number" id="tl-costs-tokens" class="tl-input" value="100000" step="10000" min="1000">
+                        </label>
+                        <button class="form-btn tl-filter-btn" onclick="HexTestingLab._refreshCosts && HexTestingLab._refreshCosts()">Estimate</button>
+                    </div>
+                    <div id="tl-costs-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script src="/static/vendor/cytoscape.min.js"></script>
+    <script src="/static/vendor/marked.min.js"></script>
+    <script src="/static/vendor/xterm.min.js"></script>
+    <script src="/static/vendor/xterm-addon-fit.min.js"></script>
+    <script src="/static/js/graph.js"></script>
+    <script src="/static/js/alerts.js"></script>
+    <script src="/static/js/terminal.js"></script>
+    <script src="/static/js/artifacts.js"></script>
+    <script src="/static/js/agent-avatars.js"></script>
+    <script src="/static/js/agents.js"></script>
+    <script src="/static/js/replay.js"></script>
+    <script src="/static/js/conversation.js"></script>
+    <script src="/static/js/conversations.js"></script>
+    <script src="/static/js/settings.js"></script>
+    <script src="/static/js/testing.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

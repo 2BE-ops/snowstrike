@@ -1,0 +1,70 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: dalfox_scan
+  category: web_scanning
+  requires_root: false
+  binary: dalfox
+  passive: false
+spec:
+  flag_map:
+  - param: mode
+    flag: null
+    position: head
+  - param: target
+    flag: null
+    position: head
+  - param: data
+    flag: -d
+  - param: cookie
+    flag: -C
+  - param: header
+    flag: -H
+  - param: blind
+    flag: --blind
+  - param: custom_payload
+    flag: --custom-payload
+  - param: mining_dict
+    flag: --mining-dict
+    transform: bool
+  compatible_agents:
+  - webapp
+  description: XSS vulnerability scanner using DalFox. Performs parameter analysis
+    and XSS detection with various payloads.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL with parameters.
+      mode:
+        type: string
+        enum:
+        - url
+        - pipe
+        - file
+        - sxss
+        description: 'Scan mode. Default: url.'
+      data:
+        type: string
+        description: POST data.
+      cookie:
+        type: string
+        description: Cookie string.
+      header:
+        type: string
+        description: Custom header.
+      blind:
+        type: string
+        description: Blind XSS callback URL.
+      custom_payload:
+        type: string
+        description: Path to custom payload file.
+      mining_dict:
+        type: boolean
+        description: Enable dictionary mining for parameter discovery.
+      extra_args:
+        type: string
+        description: Additional dalfox arguments.
+    required:
+    - target

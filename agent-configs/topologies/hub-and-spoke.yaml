@@ -1,0 +1,47 @@
+apiVersion: snowstrike/v1
+kind: Topology
+metadata:
+  name: hub-and-spoke
+  description: 'Default topology: orchestrator dispatches to all agents; agents report
+    back via handoff'
+spec:
+  orchestrator: orchestrator
+  agents: &id001
+  - recon
+  - webapp
+  - browser
+  - attack
+  - cloud
+  - binary
+  - forensics
+  - osint
+  - reporting
+  edges:
+  - from: orchestrator
+    to: *id001
+    type: dispatch
+  - from:
+    - recon
+    - webapp
+    - browser
+    - attack
+    - cloud
+    - binary
+    - forensics
+    - osint
+    to: orchestrator
+    type: handoff
+  - from: recon
+    to:
+    - webapp
+    - attack
+    type: direct_handoff
+  - from: webapp
+    to:
+    - attack
+    type: direct_handoff
+  - from: osint
+    to:
+    - recon
+    - webapp
+    type: direct_handoff

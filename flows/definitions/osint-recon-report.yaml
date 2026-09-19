@@ -1,0 +1,105 @@
+apiVersion: snowstrike/v1
+kind: Flow
+metadata:
+  name: osint-recon-report
+  version: 1
+  display_name: "OSINT Recon Report Pipeline"
+  description: "Full OSINT reconnaissance with automated report generation"
+  tags: [osint, recon, reporting]
+  category: osint
+
+spec:
+  trigger:
+    type: manual
+
+  execution_mode: standalone
+
+  inputs:
+    target:
+      type: string
+      required: true
+      description: "Target domain or organization name"
+    depth:
+      type: string
+      required: false
+      default: "standard"
+      description: "Recon depth: light | standard | deep"
+
+  outputs:
+    report:
+      type: string
+      source: "save_report.file_path"
+      description: "Path to generated report"
+
+  timeout: 7200
+
+  on_failure:
+    strategy: skip_failed
+    notify: true
+
+  steps:
+    - id: osint_recon
+      type: agent_dispatch
+      agent: osint
+      task: >
+        Perform comprehensive OSINT reconnaissance on {{ inputs.target }}.
+        Depth level: {{ inputs.depth }}.
+        Focus on: email harvesting, domain intelligence, credential leak search,
+        technology fingerprinting, and social engineering recon.
+      timeout: 1800
+
+    - id: network_recon
+      type: agent_dispatch
+      agent: recon
+      task: >
+        Based on OSINT findings, perform network reconnaissance.
+        OSINT Summary: {{ steps.osint_recon.summary | default('No OSINT data available') }}
+        Focus on service enumeration and technology detection.
+      depends_on: [osint_recon]
+      timeout: 1800
+
+    - id: has_web_services
+      type: condition
+      expression: "'http' in steps.network_recon.summary or 'web' in steps.network_recon.summary or 'HTTP' in steps.network_recon.summary"
+      depends_on: [network_recon]
+
+    - id: webapp_recon
+      type: agent_dispatch
+      agent: webapp
+      task: >
+        Perform web application reconnaissance on discovered services.
+        Network recon summary: {{ steps.network_recon.summary | default('') }}
+        Focus on content discovery, technology detection, and vulnerability scanning.
+      depends_on: [network_recon]
+      when: "steps.has_web_services.result == True"
+      timeout: 1800
+
+    - id: compile_findings
+      type: transform
+      operation: merge_dicts
+      sources:
+        - "steps.osint_recon.findings"
+        - "steps.network_recon.findings"
+        - "steps.webapp_recon.findings"
+      depends_on: [osint_recon, network_recon, webapp_recon]
+
+    - id: generate_report
+      type: agent_dispatch
+      agent: reporting
+      task: >
+        Generate a comprehensive OSINT and reconnaissance report.
+        Target: {{ inputs.target }}
+
+        Compiled Findings:
+        {{ steps.compile_findings.output | tojson | truncate(3000) }}
+
+        Include: executive summary, methodology, findings by category,
+        risk assessment, and recommendations.
+      depends_on: [compile_findings]
+      timeout: 900
+
+    - id: save_report
+      type: save_artifact
+      path: "{{ workspace }}/artifacts/osint_report_{{ inputs.target | slugify }}.md"
+      content: "{{ steps.generate_report.summary | default('Report generation failed.') }}"
+      depends_on: [generate_report]

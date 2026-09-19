@@ -1,0 +1,75 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: attack
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Attack Specialist
+  description: Exploit selection and execution, credential attacks, privilege escalation,
+    and lateral movement
+  agent_class: agents.attack_agent.AttackAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 2
+  prompt:
+    template: attack
+  tools:
+  - searchsploit_search
+  - msfconsole_run
+  - msfvenom_generate
+  - metasploit_module
+  - hydra_attack
+  - john_crack
+  - hashcat_crack
+  - evil_winrm_connect
+  - bloodhound_query
+  - generic_command
+  - smbmap_exploit
+  - netexec_exploit
+  - patator_attack
+  - netexec_brute
+  - hashid_scan
+  - crackstation_lookup
+  capabilities:
+    skills:
+    - exploit_selection
+    - exploit_execution
+    - payload_generation
+    - cve_exploitation
+    - shell_upgrade
+    - linux_privesc
+    - windows_privesc
+    - ad_attack_paths
+    - remote_access
+    - lateral_movement
+    - network_exploitation
+    - network_brute_force
+    - password_cracking
+    - hash_identification
+    - credential_spraying
+    - rainbow_table_attack
+    - hash_lookup
+    - protocol_brute_force
+    - credential_reuse_testing
+    - auto_credential_extraction
+    - privesc_detection
+    produces:
+    - shell_access
+    - reverse_shells
+    - footholds
+    - exploitation_evidence
+    - root_access
+    - elevated_credentials
+    - escalation_paths
+    - sensitive_files
+    - valid_credentials
+    - cracked_passwords
+    - hash_types
+    - credential_pairs
+    - access_obtained_handoffs
+    - lateral_movement_intel
+    requires: []
+  handoff_targets:
+  - orchestrator

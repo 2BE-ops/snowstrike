@@ -1,0 +1,68 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ffuf_fuzz
+  category: web_scanning
+  requires_root: false
+  binary: ffuf
+  passive: false
+spec:
+  flag_map:
+  - param: url
+    flag: -u
+  - param: wordlist
+    flag: -w
+  - param: method
+    flag: -X
+  - param: data
+    flag: -d
+  - param: headers
+    flag: -H
+  - param: mc
+    flag: -mc
+  - param: fc
+    flag: -fc
+  - param: rate
+    flag: -rate
+  compatible_agents:
+  - webapp
+  description: FFuf fuzzing for injection testing. Uses FUZZ keyword for parameter
+    and payload fuzzing.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL with FUZZ keyword.
+      wordlist:
+        type: string
+        description: Path to wordlist for the FUZZ keyword.
+      method:
+        type: string
+        enum:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        description: 'HTTP method. Default: GET.'
+      data:
+        type: string
+        description: POST data (can contain FUZZ keyword).
+      headers:
+        type: string
+        description: 'Custom headers as ''Key: Value'' string.'
+      mc:
+        type: string
+        description: Match HTTP status codes (e.g., '200,302').
+      fc:
+        type: string
+        description: Filter HTTP status codes (e.g., '404,403').
+      rate:
+        type: integer
+        description: Requests per second rate limit.
+      extra_args:
+        type: string
+        description: Additional ffuf arguments.
+    required:
+    - url
+    - wordlist

@@ -1,0 +1,50 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: netexec_brute
+  category: credential_cracking
+  requires_root: false
+  binary: netexec
+  passive: false
+spec:
+  flag_map:
+  - param: protocol
+    flag: null
+    position: head
+  - param: target
+    flag: null
+    position: head
+  - param: username_file
+    flag: -u
+  - param: password_file
+    flag: -p
+  compatible_agents:
+  - attack
+  description: Brute-force credentials using NetExec (formerly CrackMapExec). Supports
+    SMB, SSH, LDAP, WinRM.
+  input_schema:
+    type: object
+    properties:
+      protocol:
+        type: string
+        enum:
+        - smb
+        - ssh
+        - ldap
+        - winrm
+        description: Protocol to brute-force.
+      target:
+        type: string
+        description: Target IP, hostname, or CIDR range.
+      username_file:
+        type: string
+        description: Path to username wordlist.
+      password_file:
+        type: string
+        description: Path to password wordlist.
+      extra_args:
+        type: string
+        description: Additional netexec arguments.
+    required:
+    - protocol
+    - target

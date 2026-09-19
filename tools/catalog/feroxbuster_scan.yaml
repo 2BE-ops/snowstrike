@@ -1,0 +1,53 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: feroxbuster_scan
+  category: web_scanning
+  requires_root: false
+  binary: feroxbuster
+  passive: false
+spec:
+  description: Recursive content discovery using Feroxbuster. Fast, recursive, and
+    supports auto-filtering.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL.
+      wordlist:
+        type: string
+        description: 'Path to wordlist. Default: /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt.'
+      extensions:
+        type: string
+        description: File extensions (e.g., 'php,html,js').
+      threads:
+        type: integer
+        description: 'Number of threads. Default: 50.'
+      depth:
+        type: integer
+        description: 'Recursion depth. Default: 4.'
+      status_codes:
+        type: string
+        description: Status codes to include (e.g., '200,301').
+      filter_status:
+        type: string
+        description: Status codes to exclude (e.g., '404,403').
+      filter_size:
+        type: string
+        description: Response sizes to filter out.
+      headers:
+        type: object
+        description: 'Custom HTTP headers as key-value pairs (e.g., {"Host": "target.htb"}).'
+      insecure:
+        type: boolean
+        description: Skip TLS certificate verification.
+      extra_args:
+        type: string
+        description: Additional feroxbuster arguments.
+    required:
+    - target
+  timeout: 360
+  cumulative_ceiling: 600
+  compatible_agents:
+  - webapp

@@ -1,0 +1,51 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: hydra_attack
+  category: brute_force
+  binary: hydra
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Network login brute-forcer using Hydra. Supports SSH, FTP, HTTP, SMB, RDP, and
+    many more protocols.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      service:
+        type: string
+        description: Service to attack (e.g., 'ssh', 'ftp', 'http-post-form', 'smb',
+          'rdp', 'mysql').
+      username:
+        type: string
+        description: Single username to try.
+      username_list:
+        type: string
+        description: Path to username wordlist.
+      password:
+        type: string
+        description: Single password to try.
+      password_list:
+        type: string
+        description: Path to password wordlist.
+      port:
+        type: integer
+        description: Target port (overrides default).
+      threads:
+        type: integer
+        description: 'Number of parallel tasks. Default: 16.'
+      http_form:
+        type: string
+        description: HTTP form parameters for http-post-form (path:params:fail_string).
+      extra_args:
+        type: string
+        description: Additional hydra arguments.
+    required:
+    - target
+    - service
+  compatible_agents:
+  - attack

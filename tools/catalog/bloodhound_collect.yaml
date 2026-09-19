@@ -1,0 +1,79 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: bloodhound_collect
+  category: ad_enumeration
+  requires_root: false
+  binary: bloodhound-python
+  passive: false
+spec:
+  flag_map:
+  - param: domain
+    flag: -d
+  - param: username
+    flag: -u
+  - param: password
+    flag: -p
+  - param: hashes
+    flag: --hashes
+  - param: nameserver
+    flag: -ns
+  - param: domain_controller
+    flag: -dc
+  - param: collection_method
+    flag: -c
+  - param: stealth
+    flag: --stealth
+    transform: bool
+  - param: zip_output
+    flag: --zip
+    transform: bool
+  - param: output_dir
+    flag: -o
+  compatible_agents:
+  - attack
+  description: Run BloodHound Python ingestor (bloodhound-python) to collect Active
+    Directory data. Enumerates users, groups, computers, sessions, ACLs, trusts, and
+    GPOs from a domain controller. Outputs JSON files consumable by BloodHound for
+    attack path analysis.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target AD domain (e.g., 'corp.local').
+      username:
+        type: string
+        description: Domain username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      hashes:
+        type: string
+        description: NTLM hash for pass-the-hash (LM:NT format).
+      nameserver:
+        type: string
+        description: Custom DNS server (domain controller IP).
+      domain_controller:
+        type: string
+        description: Specific domain controller hostname or IP to target.
+      collection_method:
+        type: string
+        description: 'Collection method(s). Comma-separated. Options: Default, Group,
+          LocalAdmin, Session, Trusts, ACL, Container, RDP, DCOM, DCOnly, ObjectProps,
+          PSRemote, All.'
+      stealth:
+        type: boolean
+        description: Use stealth collection (single requests, slower but quieter).
+      zip_output:
+        type: boolean
+        description: 'Compress output into a ZIP file. Default: true.'
+      output_dir:
+        type: string
+        description: Output directory for collected JSON files.
+      extra_args:
+        type: string
+        description: Additional bloodhound-python arguments.
+    required:
+    - domain
+    - username

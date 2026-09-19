@@ -1,0 +1,24 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_load_program
+  category: session_mgmt
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /load_program
+  http_method: POST
+spec:
+  description: >-
+    Load a binary file into Ghidra for analysis. The file must be accessible from
+    the ghidra-mcp server.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Absolute path to the binary file to load.
+    required:
+    - file
+  compatible_agents:
+  - ghidra

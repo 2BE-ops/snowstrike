@@ -1,0 +1,16 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+snowstrike-env/
+engagements/
+results/
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+.pytest_cache/
+.mypy_cache/
+docs/
+IMPLEMENTATION_PLAN.md

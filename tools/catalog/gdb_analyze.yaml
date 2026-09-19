@@ -1,0 +1,38 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: gdb_analyze
+  category: debugging
+  binary: gdb
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Debug or analyze a binary using GDB. Run GDB commands for debugging, memory inspection,
+    breakpoint setting.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to binary file or core dump.
+      commands:
+        type: array
+        items:
+          type: string
+        description: >-
+          GDB commands to execute (e.g., ['info functions', 'disassemble main', 'x/20x
+          $esp']).
+      args:
+        type: string
+        description: Arguments to pass to the program being debugged.
+      pid:
+        type: integer
+        description: PID of running process to attach to.
+      extra_args:
+        type: string
+        description: Additional gdb arguments.
+    required:
+    - file
+  compatible_agents:
+  - binary

@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: responder_scan
+  category: network_scanning
+  requires_root: true
+  binary: responder
+  passive: false
+spec:
+  flag_map:
+  - param: interface
+    flag: -I
+  - param: analyze_mode
+    flag: -A
+    transform: bool
+  compatible_agents:
+  - recon
+  description: LLMNR/NBT-NS/mDNS poisoner and credential interceptor using Responder.
+  input_schema:
+    type: object
+    properties:
+      interface:
+        type: string
+        description: Network interface to listen on (e.g., 'eth0').
+      analyze_mode:
+        type: boolean
+        description: Run in analyze mode only (-A), no poisoning.
+      extra_args:
+        type: string
+        description: Additional responder arguments.
+    required:
+    - interface

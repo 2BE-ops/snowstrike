@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: angr_analyze
+  category: symbolic_exec
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Perform symbolic execution on a binary using angr. Find paths to target addresses
+    while avoiding others.
+  input_schema:
+    type: object
+    properties:
+      binary_path:
+        type: string
+        description: Path to the binary file.
+      find_addr:
+        type: string
+        description: Target address to reach (hex, e.g., '0x401234').
+      avoid_addr:
+        type: string
+        description: Address to avoid (hex, e.g., '0x401300').
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required:
+    - binary_path
+  compatible_agents:
+  - binary

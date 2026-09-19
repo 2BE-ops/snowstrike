@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_set_function_prototype
+  category: annotation
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /set_function_prototype
+  http_method: POST
+spec:
+  description: >-
+    Set a function's prototype (return type, parameters). Use to correct Ghidra's
+    type inference.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Function name.
+      address:
+        type: string
+        description: Function address in hex.
+      prototype:
+        type: string
+        description: C-style prototype (e.g., 'int check_password(char *input, int
+          len)').
+    required:
+    - prototype
+  compatible_agents:
+  - ghidra

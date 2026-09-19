@@ -1,0 +1,52 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nmap_advanced
+  category: network_scanning
+  requires_root: true
+  binary: nmap
+  passive: false
+spec:
+  description: Run an advanced Nmap scan with NSE script categories, custom timing,
+    decoy and fragmentation options for more thorough or evasive scanning.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP, hostname, or CIDR range.
+      ports:
+        type: string
+        description: Port specification.
+      script_categories:
+        type: array
+        items:
+          type: string
+        description: NSE script categories (e.g., ['vuln', 'exploit', 'auth']).
+      script_args:
+        type: string
+        description: NSE script arguments (key=value pairs).
+      decoys:
+        type: string
+        description: Decoy addresses for -D flag (e.g., 'RND:5').
+      fragment:
+        type: boolean
+        description: Enable packet fragmentation (-f).
+      source_port:
+        type: integer
+        description: Use specific source port.
+      min_rate:
+        type: integer
+        description: Minimum packet send rate.
+      max_rate:
+        type: integer
+        description: Maximum packet send rate.
+      extra_args:
+        type: string
+        description: Additional raw nmap arguments.
+    required:
+    - target
+  timeout: 480
+  cumulative_ceiling: 900
+  compatible_agents:
+  - recon

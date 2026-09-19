@@ -1,0 +1,34 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: whatweb_scan
+  category: tech_detection
+  binary: whatweb
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Identify web technologies on a target including CMS, frameworks, servers, and
+    JavaScript libraries.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL.
+      aggression:
+        type: integer
+        minimum: 1
+        maximum: 4
+        description: 'Aggression level for WhatWeb. Valid levels are 1, 3, or 4. Default:
+          1.'
+      verbose:
+        type: boolean
+        description: Verbose output.
+      extra_args:
+        type: string
+        description: Additional whatweb arguments.
+    required:
+    - target
+  compatible_agents:
+  - recon

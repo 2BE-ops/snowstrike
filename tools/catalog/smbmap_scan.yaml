@@ -1,0 +1,58 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: smbmap_scan
+  category: smb_enumeration
+  requires_root: false
+  binary: smbmap
+  passive: false
+spec:
+  flag_map:
+  - param: target
+    flag: -H
+  - param: username
+    flag: -u
+  - param: password
+    flag: -p
+  - param: domain
+    flag: -d
+  - param: share
+    flag: -s
+  - param: recursive
+    flag: -R
+    transform: bool
+  - param: depth
+    flag: --depth
+  compatible_agents:
+  - recon
+  description: Enumerate SMB shares and permissions across a network. Checks read/write
+    access to shares.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      username:
+        type: string
+        description: Username for authentication.
+      password:
+        type: string
+        description: Password for authentication.
+      domain:
+        type: string
+        description: Domain name.
+      share:
+        type: string
+        description: Specific share to enumerate.
+      recursive:
+        type: boolean
+        description: Recursively list share contents.
+      depth:
+        type: integer
+        description: Recursion depth limit.
+      extra_args:
+        type: string
+        description: Additional smbmap arguments.
+    required:
+    - target

@@ -1,0 +1,33 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: wafw00f_scan
+  category: web_scanning
+  requires_root: false
+  binary: wafw00f
+  passive: false
+spec:
+  flag_map:
+  - param: list_all
+    flag: -l
+    transform: bool
+  - param: url
+    flag: null
+  compatible_agents:
+  - recon
+  description: WAF detection using wafw00f. Identifies web application firewalls protecting
+    a target.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL.
+      list_all:
+        type: boolean
+        description: List all WAFs that can be detected.
+      extra_args:
+        type: string
+        description: Additional wafw00f arguments.
+    required:
+    - url

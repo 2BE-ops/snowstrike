@@ -1,0 +1,65 @@
+apiVersion: snowstrike/v1
+kind: Flow
+metadata:
+  name: asset-discovery
+  version: 1
+  display_name: "Asset Discovery Scan"
+  description: "Network asset discovery with analysis and inventory report"
+  tags: [recon, discovery, inventory]
+  category: recon
+
+spec:
+  trigger:
+    type: manual
+
+  execution_mode: standalone
+
+  inputs:
+    target_range:
+      type: string
+      required: true
+      description: "Target IP range (e.g., 10.10.10.0/24)"
+    ports:
+      type: string
+      required: false
+      default: "1-1000"
+      description: "Port range to scan"
+
+  outputs:
+    inventory:
+      type: string
+      source: "save_inventory.file_path"
+      description: "Path to asset inventory file"
+
+  timeout: 3600
+
+  on_failure:
+    strategy: skip_failed
+    notify: true
+
+  steps:
+    - id: discovery_scan
+      type: tool_exec
+      tool: nmap_scan
+      args:
+        target: "{{ inputs.target_range }}"
+        ports: "{{ inputs.ports }}"
+        extra_args: "-sV --open"
+      timeout: 600
+
+    - id: analyze_results
+      type: agent_dispatch
+      agent: recon
+      task: >
+        Analyze scan results from asset discovery.
+        Scan Output: {{ steps.discovery_scan.output | default('No scan output') | truncate(3000) }}
+        Identify hosts, services, and potential risks.
+        Provide a structured summary.
+      depends_on: [discovery_scan]
+      timeout: 600
+
+    - id: save_inventory
+      type: save_artifact
+      path: "{{ workspace }}/artifacts/asset_inventory.md"
+      content: "{{ steps.analyze_results.summary | default('Analysis failed.') }}"
+      depends_on: [analyze_results]

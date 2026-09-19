@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: browser_screenshot
+  category: capture
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: Take a screenshot of a web page using headless Chrome.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: URL to screenshot.
+      output_path:
+        type: string
+        description: Path to save the screenshot image.
+      full_page:
+        type: boolean
+        description: 'Capture the full scrollable page. Default: false.'
+      viewport_width:
+        type: integer
+        description: 'Viewport width in pixels. Default: 1280.'
+      viewport_height:
+        type: integer
+        description: 'Viewport height in pixels. Default: 720.'
+    required:
+    - url
+  compatible_agents:
+  - browser

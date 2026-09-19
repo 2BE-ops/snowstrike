@@ -1,0 +1,18 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_get_entry_points
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /get_entry_points
+  http_method: GET
+spec:
+  description: Get all entry points of the program (main, _start, exported functions).
+  input_schema:
+    type: object
+    properties: {}
+    required: []
+  compatible_agents:
+  - ghidra

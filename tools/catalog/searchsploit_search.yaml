@@ -1,0 +1,58 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: searchsploit_search
+  category: exploitation
+  requires_root: false
+  binary: searchsploit
+  passive: true
+spec:
+  flag_map:
+  - param: json_output
+    flag: -j
+    transform: bool
+  - param: exact
+    flag: -e
+    transform: bool
+  - param: cve
+    flag: --cve
+  - param: type
+    flag: -t
+  - param: platform
+    flag: --platform
+  - param: query
+    flag: null
+  compatible_agents:
+  - attack
+  description: Search the Exploit-DB database locally using SearchSploit for known
+    exploits and vulnerabilities.
+  input_schema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Search query (e.g., 'Apache 2.4.49', 'Microsoft SMB').
+      exact:
+        type: boolean
+        description: Perform exact match search.
+      cve:
+        type: string
+        description: Search by CVE year (e.g., '2021').
+      type:
+        type: string
+        enum:
+        - exploit
+        - shellcode
+        - paper
+        description: Filter by type.
+      platform:
+        type: string
+        description: Filter by platform (e.g., 'linux', 'windows').
+      json_output:
+        type: boolean
+        description: 'Output in JSON format. Default: true.'
+      extra_args:
+        type: string
+        description: Additional searchsploit arguments.
+    required:
+    - query

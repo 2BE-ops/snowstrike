@@ -1,0 +1,67 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: trufflehog_scan
+  category: secret_scanning
+  requires_root: false
+  binary: trufflehog
+  passive: false
+spec:
+  flag_map:
+  - param: scan_type
+    flag: null
+    position: head
+  - param: target
+    flag: null
+    position: head
+  - param: only_verified
+    flag: --only-verified
+    transform: bool
+  - param: entropy
+    flag: --entropy
+    transform: bool
+  - param: regex
+    flag: --regex
+  - param: since_commit
+    flag: --since-commit
+  - param: branch
+    flag: --branch
+  compatible_agents:
+  - attack
+  description: Scan for secrets and credentials in git repositories, filesystems,
+    and S3 buckets using TruffleHog.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Git repo URL, filesystem path, or S3 bucket.
+      scan_type:
+        type: string
+        enum:
+        - git
+        - filesystem
+        - s3
+        - github
+        description: Type of scan.
+      only_verified:
+        type: boolean
+        description: Only report verified secrets.
+      entropy:
+        type: boolean
+        description: Enable entropy-based detection.
+      regex:
+        type: string
+        description: Custom regex rules file.
+      since_commit:
+        type: string
+        description: Scan commits since this hash.
+      branch:
+        type: string
+        description: Specific branch to scan.
+      extra_args:
+        type: string
+        description: Additional trufflehog arguments.
+    required:
+    - target
+    - scan_type

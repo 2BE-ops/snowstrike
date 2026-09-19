@@ -1,0 +1,84 @@
+apiVersion: snowstrike/v1
+kind: Flow
+metadata:
+  name: binary-re-report
+  version: 1
+  display_name: "Binary RE Analysis Report"
+  description: "Automated reverse engineering analysis with report"
+  tags: [binary, reverse-engineering, reporting]
+  category: re
+
+spec:
+  trigger:
+    type: manual
+
+  execution_mode: standalone
+
+  inputs:
+    binary_path:
+      type: string
+      required: true
+      description: "Path to binary file to analyze"
+    focus_areas:
+      type: string
+      required: false
+      default: "vulnerabilities, crypto, authentication"
+      description: "Comma-separated analysis focus areas"
+
+  outputs:
+    report:
+      type: string
+      source: "save_report.file_path"
+      description: "Path to generated report"
+
+  timeout: 5400
+
+  on_failure:
+    strategy: skip_failed
+    notify: true
+
+  steps:
+    - id: static_analysis
+      type: agent_dispatch
+      agent: binary
+      task: >
+        Perform static analysis on binary: {{ inputs.binary_path }}
+        Focus areas: {{ inputs.focus_areas }}
+        Run checksec, strings, readelf, objdump.
+        Identify interesting functions, hardcoded credentials, crypto constants.
+      timeout: 1800
+
+    - id: deep_re
+      type: agent_dispatch
+      agent: ghidra
+      task: >
+        Perform deep reverse engineering analysis on {{ inputs.binary_path }}.
+        Static analysis findings: {{ steps.static_analysis.summary | default('No static analysis data') }}
+        Decompile key functions, trace control flow, identify vulnerabilities.
+        Focus on: {{ inputs.focus_areas }}
+      depends_on: [static_analysis]
+      timeout: 2400
+
+    - id: generate_report
+      type: agent_dispatch
+      agent: reporting
+      task: >
+        Generate a reverse engineering analysis report.
+        Binary: {{ inputs.binary_path }}
+
+        Static Analysis:
+        {{ steps.static_analysis.summary | default('N/A') }}
+
+        Deep RE Findings:
+        {{ steps.deep_re.summary | default('N/A') }}
+
+        Include: binary metadata, security features (checksec), function analysis,
+        vulnerability assessment, crypto analysis, recommendations.
+      depends_on: [static_analysis, deep_re]
+      timeout: 900
+
+    - id: save_report
+      type: save_artifact
+      path: "{{ workspace }}/artifacts/re_report_{{ inputs.binary_path | basename | slugify }}.md"
+      content: "{{ steps.generate_report.summary | default('Report generation failed.') }}"
+      depends_on: [generate_report]

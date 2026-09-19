@@ -1,0 +1,26 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: docker_bench_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: docker-bench-security
+  passive: false
+spec:
+  flag_map:
+  - param: check
+    flag: -c
+  compatible_agents:
+  - cloud
+  description: Docker security benchmark check using docker-bench-security. Checks
+    Docker daemon and container configurations against CIS benchmarks.
+  input_schema:
+    type: object
+    properties:
+      check:
+        type: string
+        description: Specific check to run (e.g., '1.1', '2.2').
+      extra_args:
+        type: string
+        description: Additional docker-bench-security arguments.
+    required: []

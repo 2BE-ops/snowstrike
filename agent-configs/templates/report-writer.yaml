@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: report-writer
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Report Writer
+  description: Finding compilation, risk scoring, remediation
+  model: claude-sonnet-4-20250514
+  max_turns: 20
+  max_concurrent: 1
+  prompt:
+    template: reporting
+  tools: []
+  capabilities:
+    skills:
+    - finding_compilation
+    - risk_scoring
+    - executive_summary
+    - remediation_guidance
+    produces:
+    - pentest_report
+    - executive_summary
+    - remediation_plan
+    requires:
+    - findings
+    - exploitation_evidence
+    - attack_story
+  handoff_targets:
+  - orchestrator

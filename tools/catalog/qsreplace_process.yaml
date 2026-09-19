@@ -1,0 +1,26 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: qsreplace_process
+  category: utility
+  requires_root: false
+  binary: qsreplace
+  passive: true
+spec:
+  flag_map:
+  - param: replacement_value
+    flag: null
+  compatible_agents:
+  - webapp
+  description: Replace query string parameter values in URLs using qsreplace.
+  input_schema:
+    type: object
+    properties:
+      replacement_value:
+        type: string
+        description: Value to replace all query string parameter values with.
+      extra_args:
+        type: string
+        description: Additional qsreplace arguments.
+    required:
+    - replacement_value

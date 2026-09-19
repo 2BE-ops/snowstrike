@@ -1,0 +1,43 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: xxd_dump
+  category: binary_analysis
+  requires_root: false
+  binary: xxd
+  passive: false
+spec:
+  flag_map:
+  - param: reverse
+    flag: -r
+    transform: bool
+  - param: offset
+    flag: -s
+  - param: length
+    flag: -l
+  - param: file_path
+    flag: null
+  compatible_agents:
+  - binary
+  description: Create a hex dump of a file using xxd. Supports offset, length, and
+    reverse operations.
+  input_schema:
+    type: object
+    properties:
+      file_path:
+        type: string
+        description: Path to the file to hex dump.
+      offset:
+        type: string
+        description: Start offset in hex (e.g., '0x100').
+      length:
+        type: integer
+        description: Number of bytes to dump.
+      reverse:
+        type: boolean
+        description: 'Reverse operation: convert hex dump back to binary.'
+      extra_args:
+        type: string
+        description: Additional xxd arguments.
+    required:
+    - file_path

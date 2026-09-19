@@ -1,0 +1,26 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_set_decompiler_comment
+  category: annotation
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /set_decompiler_comment
+  http_method: POST
+spec:
+  description: Add a comment to a specific address in the decompiler view.
+  input_schema:
+    type: object
+    properties:
+      address:
+        type: string
+        description: Address in hex (e.g., '0x401000').
+      comment:
+        type: string
+        description: Comment text to set.
+    required:
+    - address
+    - comment
+  compatible_agents:
+  - ghidra

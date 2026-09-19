@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nbtscan_scan
+  category: network_scanning
+  requires_root: false
+  binary: nbtscan
+  passive: false
+spec:
+  flag_map:
+  - param: target
+    flag: null
+  compatible_agents:
+  - recon
+  description: NetBIOS name scanner using nbtscan. Scans for NetBIOS name information
+    on a network.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or CIDR range.
+      extra_args:
+        type: string
+        description: Additional nbtscan arguments.
+    required:
+    - target

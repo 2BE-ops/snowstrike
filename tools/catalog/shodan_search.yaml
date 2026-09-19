@@ -1,0 +1,34 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: shodan_search
+  category: device_search
+  binary: shodan
+  requires_root: false
+  passive: false
+spec:
+  description: Search Shodan for internet-connected devices, services, and vulnerabilities.
+  input_schema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Shodan search query (e.g., 'apache port:8080 country:US').
+      host:
+        type: string
+        description: Look up a specific IP address.
+      count:
+        type: boolean
+        description: Only return the count of results.
+      facets:
+        type: string
+        description: Facet fields (e.g., 'country,org').
+      limit:
+        type: integer
+        description: Maximum number of results.
+      extra_args:
+        type: string
+        description: Additional shodan arguments.
+    required: []
+  compatible_agents:
+  - osint

@@ -1,0 +1,37 @@
+[project]
+name = "snowstrike"
+version = "7.0.0"
+description = "SnowStrike AI — Autonomous Penetration Testing Framework"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.89.0",
+    "openai>=2.30.0",
+    "fastapi>=0.118.0",
+    "uvicorn>=0.32.0",
+    "python-dotenv>=1.0.1",
+    "jinja2>=3.1.6",
+    "pydantic>=2.12.0",
+    "httpx>=0.28.0",
+    "filelock>=3.20.0",
+    "pyyaml>=6.0.2",
+    "croniter>=1.3.0",
+]
+
+[project.optional-dependencies]
+browser = [
+    "playwright>=1.40.0",
+]
+browser-stealth = [
+    "camoufox[geoip]>=0.4.11",
+    "playwright>=1.40.0",
+]
+dev = [
+    "pytest>=8.4.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "tools*", "memory*", "dashboard*", "config*", "flows*", "profiles*"]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"

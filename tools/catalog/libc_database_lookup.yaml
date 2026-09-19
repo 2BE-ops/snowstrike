@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: libc_database_lookup
+  category: exploit_dev
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: Look up libc version from leaked function addresses using libc-database.
+  input_schema:
+    type: object
+    properties:
+      function_name:
+        type: string
+        description: Leaked function name (e.g., 'puts', 'printf').
+      address:
+        type: string
+        description: Leaked address in hex (e.g., '0x7f1234567890').
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required:
+    - function_name
+    - address
+  compatible_agents:
+  - binary

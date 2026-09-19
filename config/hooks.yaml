@@ -1,0 +1,24 @@
+hooks:
+  - name: block-masscan-without-rate-limit
+    event: PreToolUse
+    match:
+      tool_name: masscan_scan
+      arg_missing: rate
+    action: BLOCK
+    message: "masscan requires explicit --rate to prevent network disruption"
+
+  - name: log-all-exploit-tools
+    event: PreToolUse
+    match:
+      tool_name_pattern: "exploit_*|metasploit_*"
+    action: LOG_ONLY
+    message: "Exploit tool execution logged for audit"
+
+  - name: block-nmap-full-internet
+    event: PreToolUse
+    match:
+      tool_name: nmap_scan
+      arg_pattern:
+        target: "0\\.0\\.0\\.0/0|::/0"
+    action: BLOCK
+    message: "Full internet scan is never in scope"

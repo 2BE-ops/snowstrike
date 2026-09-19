@@ -1,0 +1,45 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: snmpwalk_scan
+  category: snmp_scanning
+  requires_root: false
+  binary: snmpwalk
+  passive: false
+spec:
+  flag_map:
+  - param: version
+    flag: -v
+  - param: community
+    flag: -c
+  - param: target
+    flag: null
+  - param: oid
+    flag: null
+  compatible_agents:
+  - recon
+  description: SNMP walk to enumerate SNMP information from a target device.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      community:
+        type: string
+        description: 'SNMP community string. Default: public.'
+      version:
+        type: string
+        enum:
+        - '1'
+        - 2c
+        - '3'
+        description: 'SNMP version. Default: 2c.'
+      oid:
+        type: string
+        description: Starting OID for the walk.
+      extra_args:
+        type: string
+        description: Additional snmpwalk arguments.
+    required:
+    - target

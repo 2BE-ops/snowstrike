@@ -1,0 +1,38 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: checksec_check
+  category: binary_analysis
+  requires_root: false
+  binary: checksec
+  passive: false
+spec:
+  flag_map:
+  - param: file
+    flag: --file=
+    join: true
+  - param: format
+    flag: --format=
+    join: true
+  compatible_agents:
+  - binary
+  description: Check binary security properties (NX, PIE, RELRO, Stack Canary, FORTIFY)
+    using checksec.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to binary file.
+      format:
+        type: string
+        enum:
+        - cli
+        - json
+        - xml
+        description: 'Output format. Default: cli.'
+      extra_args:
+        type: string
+        description: Additional checksec arguments.
+    required:
+    - file

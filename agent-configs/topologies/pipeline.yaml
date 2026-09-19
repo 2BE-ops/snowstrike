@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Topology
+metadata:
+  name: pipeline
+  description: 'Linear pipeline: recon → webapp → attack → reporting'
+spec:
+  orchestrator: orchestrator
+  agents:
+  - recon
+  - webapp
+  - attack
+  - reporting
+  edges:
+  - from: orchestrator
+    to:
+    - recon
+    type: dispatch
+  - from: recon
+    to:
+    - webapp
+    type: direct_handoff
+  - from: webapp
+    to:
+    - attack
+    type: direct_handoff
+  - from: attack
+    to:
+    - reporting
+    type: direct_handoff
+  - from: reporting
+    to: orchestrator
+    type: handoff

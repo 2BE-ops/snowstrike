@@ -1,0 +1,33 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: rsatool_analyze
+  category: crypto
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    RSA key analysis and reconstruction. Compute private keys from known factors or
+    analyze RSA parameters.
+  input_schema:
+    type: object
+    properties:
+      n:
+        type: string
+        description: RSA modulus N (decimal or hex with 0x prefix).
+      e:
+        type: string
+        description: Public exponent e (decimal or hex).
+      p:
+        type: string
+        description: Prime factor p (decimal or hex).
+      q:
+        type: string
+        description: Prime factor q (decimal or hex).
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required: []
+  compatible_agents:
+  - forensics

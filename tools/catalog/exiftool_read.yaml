@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: exiftool_read
+  category: metadata_analysis
+  requires_root: false
+  binary: exiftool
+  passive: false
+spec:
+  flag_map:
+  - param: all_tags
+    flag: -all
+    transform: bool
+  - param: json_output
+    flag: -json
+    transform: bool
+  - param: tag
+    flag: null
+  - param: file_path
+    flag: null
+  compatible_agents:
+  - forensics
+  description: Metadata extraction and analysis using ExifTool. Read EXIF, IPTC, XMP,
+    and other metadata from files.
+  input_schema:
+    type: object
+    properties:
+      file_path:
+        type: string
+        description: Path to file to read metadata from.
+      all_tags:
+        type: boolean
+        description: 'Show all metadata tags including duplicates. Default: false.'
+      json_output:
+        type: boolean
+        description: 'Output in JSON format. Default: false.'
+      extra_args:
+        type: string
+        description: Additional ExifTool arguments.
+    required:
+    - file_path

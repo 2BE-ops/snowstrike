@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: onesixtyone_scan
+  category: snmp_scanning
+  requires_root: false
+  binary: onesixtyone
+  passive: false
+spec:
+  flag_map:
+  - param: community_file
+    flag: -c
+  - param: target
+    flag: null
+  compatible_agents:
+  - recon
+  description: SNMP community string brute-force using onesixtyone. Fast SNMP scanner
+    for discovering valid community strings.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      community_file:
+        type: string
+        description: Path to file containing community strings to try.
+      extra_args:
+        type: string
+        description: Additional onesixtyone arguments.
+    required:
+    - target

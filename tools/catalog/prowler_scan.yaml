@@ -1,0 +1,60 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: prowler_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: prowler
+  passive: false
+spec:
+  flag_map:
+  - param: provider
+    flag: null
+    position: head
+  - param: checks
+    flag: --checks
+  - param: severity
+    flag: --severity
+  - param: region
+    flag: --region
+  - param: compliance
+    flag: --compliance
+  - param: output_format
+    flag: -M
+  compatible_agents:
+  - cloud
+  description: AWS/Azure/GCP security assessment using Prowler. Checks hundreds of
+    security best practices and compliance requirements.
+  input_schema:
+    type: object
+    properties:
+      provider:
+        type: string
+        enum:
+        - aws
+        - azure
+        - gcp
+        description: 'Cloud provider. Default: aws.'
+      checks:
+        type: string
+        description: Specific checks to run (comma-separated).
+      severity:
+        type: string
+        description: Minimum severity (e.g., 'critical', 'high').
+      region:
+        type: string
+        description: Cloud region to scan.
+      compliance:
+        type: string
+        description: Compliance framework (e.g., 'cis_1.5_aws', 'gdpr').
+      output_format:
+        type: string
+        enum:
+        - json
+        - csv
+        - html
+        description: Output format.
+      extra_args:
+        type: string
+        description: Additional prowler arguments.
+    required: []

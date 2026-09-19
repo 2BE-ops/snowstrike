@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: query_tool_history
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Query the history of tool executions in this engagement. Useful to check what
+    tools have already been run, avoid duplicates, and understand what other agents
+    have done.
+  input_schema:
+    type: object
+    properties:
+      agent_filter:
+        type: string
+        description: Filter by agent name (e.g., 'Recon Agent', 'WebApp Agent').
+      tool_filter:
+        type: string
+        description: Filter by tool name (e.g., 'nmap_scan', 'gobuster_scan').
+      limit:
+        type: integer
+        description: Maximum number of results. Default 20.
+    required: []
+  compatible_agents:
+  - all

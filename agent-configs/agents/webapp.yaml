@@ -1,0 +1,82 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: webapp
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: WebApp Scanner
+  description: Web application vulnerability scanning, directory bruteforce, injection
+    testing, and CMS analysis
+  agent_class: agents.webapp_agent.WebAppAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 2
+  prompt:
+    template: webapp
+  tools:
+  - gobuster_scan
+  - feroxbuster_scan
+  - ffuf_scan
+  - nikto_scan
+  - nuclei_scan
+  - sqlmap_scan
+  - wpscan_scan
+  - dalfox_scan
+  - katana_crawl
+  - gau_urls
+  - arjun_scan
+  - paramspider_scan
+  - anew_filter
+  - qsreplace_process
+  - uro_filter
+  - aquatone_screenshot
+  - nosqlmap_scan
+  - commix_scan
+  - tplmap_scan
+  - jwt_tool_scan
+  - graphql_scan
+  - zap_scan
+  - ffuf_fuzz
+  capabilities:
+    skills:
+    - directory_bruteforce
+    - content_discovery
+    - web_crawling
+    - url_discovery
+    - cms_scanning
+    - vulnerability_scanning
+    - parameter_discovery
+    - url_processing
+    - visual_recon
+    - technology_detection
+    - sqli_testing
+    - nosqli_testing
+    - xss_testing
+    - command_injection
+    - ssti_testing
+    - web_fuzzing
+    - jwt_testing
+    - graphql_testing
+    - proxy_scanning
+    - api_fuzzing
+    produces:
+    - accessible_endpoints
+    - discovered_parameters
+    - web_technologies
+    - cms_info
+    - url_inventory
+    - web_vulnerabilities
+    - injection_points
+    - confirmed_vulnerabilities
+    - data_extraction
+    - auth_bypass
+    - rce_evidence
+    requires:
+    - target_hosts
+    - open_ports
+    - web_services
+  handoff_targets:
+  - attack
+  - orchestrator

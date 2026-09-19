@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: browser_crawl
+  category: crawling
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: Crawl a website using headless Chrome, following links and collecting
+    page data.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Starting URL to crawl.
+      max_pages:
+        type: integer
+        description: 'Maximum number of pages to crawl. Default: 50.'
+      depth:
+        type: integer
+        description: 'Maximum crawl depth. Default: 3.'
+      same_origin:
+        type: boolean
+        description: 'Only crawl same-origin URLs. Default: true.'
+    required:
+    - url
+  compatible_agents:
+  - browser

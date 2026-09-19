@@ -1,0 +1,24 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_get_function_call_graph
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /get_function_call_graph
+  http_method: GET
+spec:
+  description: Get the call graph for a function showing caller/callee relationships.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Function name.
+      address:
+        type: string
+        description: Function address in hex.
+    required: []
+  compatible_agents:
+  - ghidra

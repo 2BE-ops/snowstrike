@@ -1,0 +1,36 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: rustscan_scan
+  category: network_scanning
+  requires_root: false
+  binary: rustscan
+  passive: false
+spec:
+  description: Fast port scanner using RustScan. Discovers open ports quickly then
+    optionally passes to nmap for service detection.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      ports:
+        type: string
+        description: 'Port range (e.g., ''1-65535''). Default: all ports.'
+      batch_size:
+        type: integer
+        description: 'Batch size for port scanning. Default: 4500.'
+      timeout:
+        type: integer
+        description: 'Timeout in ms per port. Default: 1500.'
+      nmap_args:
+        type: string
+        description: Arguments to pass to nmap for service detection (e.g., '-sV -sC').
+      ulimit:
+        type: integer
+        description: Ulimit value for open files.
+    required:
+    - target
+  compatible_agents:
+  - recon

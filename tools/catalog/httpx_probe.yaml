@@ -1,0 +1,43 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: httpx_probe
+  category: http_probe
+  binary: httpx
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Probe HTTP services using httpx. Detects web servers, status codes, titles, technologies,
+    and more.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL or domain (or stdin list).
+      targets_file:
+        type: string
+        description: Path to file containing list of targets.
+      status_code:
+        type: boolean
+        description: 'Display status code. Default: true.'
+      title:
+        type: boolean
+        description: 'Display page title. Default: true.'
+      tech_detect:
+        type: boolean
+        description: 'Detect technologies. Default: true.'
+      follow_redirects:
+        type: boolean
+        description: 'Follow redirects. Default: true.'
+      threads:
+        type: integer
+        description: Number of concurrent threads.
+      extra_args:
+        type: string
+        description: Additional httpx arguments.
+    required:
+    - target
+  compatible_agents:
+  - recon

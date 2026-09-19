@@ -1,0 +1,28 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: arp_scan
+  category: network_discovery
+  binary: arp-scan
+  requires_root: true
+  passive: false
+spec:
+  description: >-
+    ARP scan for LAN host discovery using arp-scan. Discovers live hosts on the local
+    network segment.
+  input_schema:
+    type: object
+    properties:
+      interface:
+        type: string
+        description: Network interface to use (e.g., 'eth0').
+      target:
+        type: string
+        description: Target CIDR range or '--localnet' for local network.
+      extra_args:
+        type: string
+        description: Additional arp-scan arguments.
+    required:
+    - target
+  compatible_agents:
+  - recon

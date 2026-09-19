@@ -1,0 +1,39 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: cloud-auditor
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Cloud Auditor
+  description: AWS/Azure/GCP enumeration, misconfiguration detection
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: cloud
+  tools:
+  - prowler_scan
+  - trivy_scan
+  - checkov_scan
+  - scout_suite_scan
+  - aws_cli_exec
+  - azure_cli_exec
+  - gcloud_cli_exec
+  capabilities:
+    skills:
+    - aws_audit
+    - azure_audit
+    - gcp_audit
+    - iam_analysis
+    produces:
+    - cloud_misconfigurations
+    - iam_weaknesses
+    - exposed_storage
+    requires:
+    - cloud_credentials
+    - cloud_endpoints
+  handoff_targets:
+  - attack
+  - orchestrator

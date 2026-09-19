@@ -1,0 +1,28 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: testdisk_recover
+  category: file_recovery
+  binary: testdisk
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Disk and partition recovery tool using TestDisk. Recover lost partitions and repair
+    boot sectors.
+  input_schema:
+    type: object
+    properties:
+      device:
+        type: string
+        description: Path to device or disk image.
+      log_file:
+        type: string
+        description: Path to log file.
+      extra_args:
+        type: string
+        description: Additional TestDisk arguments.
+    required:
+    - device
+  compatible_agents:
+  - forensics

@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: scout_suite_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: scout
+  passive: false
+spec:
+  flag_map:
+  - param: provider
+    flag: null
+    position: head
+  - param: profile
+    flag: --profile
+  compatible_agents:
+  - cloud
+  description: Multi-cloud security auditing tool using ScoutSuite. Analyzes AWS,
+    Azure, and GCP configurations for security risks.
+  input_schema:
+    type: object
+    properties:
+      provider:
+        type: string
+        enum:
+        - aws
+        - azure
+        - gcp
+        description: Cloud provider to audit.
+      profile:
+        type: string
+        description: Cloud provider CLI profile to use.
+      extra_args:
+        type: string
+        description: Additional ScoutSuite arguments.
+    required:
+    - provider

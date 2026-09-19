@@ -1,0 +1,29 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: pwntools_run
+  category: exploit_dev
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: Run a pwntools exploit script against a target.
+  input_schema:
+    type: object
+    properties:
+      script_path:
+        type: string
+        description: Path to the pwntools exploit script.
+      target:
+        type: string
+        description: Target host or IP.
+      port:
+        type: integer
+        description: Target port.
+      extra_args:
+        type: string
+        description: Additional arguments passed to the script.
+    required:
+    - script_path
+  compatible_agents:
+  - binary

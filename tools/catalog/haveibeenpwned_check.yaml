@@ -1,0 +1,29 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: haveibeenpwned_check
+  category: osint
+  requires_root: false
+  binary: python3
+  passive: true
+spec:
+  flag_map:
+  - param: email
+    flag: null
+  compatible_agents:
+  - osint
+  description: Check if an email or domain has been involved in data breaches using
+    HaveIBeenPwned API.
+  input_schema:
+    type: object
+    properties:
+      email:
+        type: string
+        description: Email address to check for breaches.
+      domain:
+        type: string
+        description: Domain to check for breaches.
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required: []

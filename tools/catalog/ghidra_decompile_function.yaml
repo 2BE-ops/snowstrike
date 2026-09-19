@@ -1,0 +1,25 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_decompile_function
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /decompile_function
+  http_method: GET
+spec:
+  description: >-
+    Decompile a function to C pseudocode. Provide either the function name or address.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Function name (e.g., 'main', 'check_password').
+      address:
+        type: string
+        description: Function address in hex (e.g., '0x401000').
+    required: []
+  compatible_agents:
+  - ghidra

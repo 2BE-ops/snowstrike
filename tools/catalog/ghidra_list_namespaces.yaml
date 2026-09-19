@@ -1,0 +1,18 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_list_namespaces
+  category: symbols
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /list_namespaces
+  http_method: GET
+spec:
+  description: List all namespaces (classes, modules) in the program.
+  input_schema:
+    type: object
+    properties: {}
+    required: []
+  compatible_agents:
+  - ghidra

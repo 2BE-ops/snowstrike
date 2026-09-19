@@ -1,0 +1,30 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_rename_variables
+  category: annotation
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /rename_variables
+  http_method: POST
+spec:
+  description: Rename local variables in a function to improve readability.
+  input_schema:
+    type: object
+    properties:
+      function_name:
+        type: string
+        description: Function containing the variables.
+      function_address:
+        type: string
+        description: Function address in hex.
+      renames:
+        type: string
+        description: >-
+          JSON object mapping old names to new names (e.g., '{"local_10": "buffer",
+          "param_1": "input"}').
+    required:
+    - renames
+  compatible_agents:
+  - ghidra

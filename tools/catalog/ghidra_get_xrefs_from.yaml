@@ -1,0 +1,23 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_get_xrefs_from
+  category: cross_refs
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /get_xrefs_from
+  http_method: GET
+spec:
+  description: Get all cross-references FROM an address. Shows what this location
+    references.
+  input_schema:
+    type: object
+    properties:
+      address:
+        type: string
+        description: Source address in hex (e.g., '0x401000').
+    required:
+    - address
+  compatible_agents:
+  - ghidra

@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_run_script
+  category: scripting
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /run_ghidra_script
+  http_method: POST
+spec:
+  description: >-
+    Run a named Ghidra script. Escape hatch for capabilities not covered by other
+    tools.
+  input_schema:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Script name (e.g., 'DecompileAllFunctions.java').
+      args:
+        type: string
+        description: Arguments to pass to the script.
+    required:
+    - name
+  compatible_agents:
+  - ghidra

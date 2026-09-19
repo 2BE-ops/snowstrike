@@ -1,0 +1,23 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_list_strings
+  category: data_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /list_strings
+  http_method: GET
+spec:
+  description: >-
+    List all strings found in the program. Useful for identifying interesting constants,
+    URLs, keys, and format strings.
+  input_schema:
+    type: object
+    properties:
+      min_length:
+        type: integer
+        description: 'Minimum string length to include. Default: 4.'
+    required: []
+  compatible_agents:
+  - ghidra

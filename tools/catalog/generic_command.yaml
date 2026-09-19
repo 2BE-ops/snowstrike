@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: generic_command
+  category: exploitation
+  requires_root: false
+  binary: bash
+  passive: false
+spec:
+  description: 'Execute ANY shell command on the local attack machine. This is your
+    primary tool for running curl, wget, python, mc (MinIO client), aws CLI, ssh,
+    nc, and any other command-line tool. Use this for: testing credentials via HTTP/curl,
+    interacting with S3/MinIO APIs, downloading files, making HTTP requests with custom
+    headers, brute-forcing services, running exploit scripts, privilege escalation,
+    and post-exploitation. ALWAYS try this tool first when you need to interact with
+    a service. Example: {"command": "curl -s http://10.0.0.1:54321/"}'
+  input_schema:
+    type: object
+    properties:
+      command:
+        type: string
+        description: The shell command to execute.
+      shell:
+        type: string
+        enum:
+        - bash
+        - sh
+        - powershell
+        - cmd
+        description: 'Shell to use. Default: bash.'
+      cwd:
+        type: string
+        description: Working directory.
+      timeout:
+        type: integer
+        description: 'Command timeout in seconds. Default: 120.'
+    required:
+    - command
+  timeout: 120
+  compatible_agents:
+  - attack

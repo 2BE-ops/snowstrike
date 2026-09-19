@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: pwninit_setup
+  category: binary_analysis
+  requires_root: false
+  binary: pwninit
+  passive: false
+spec:
+  flag_map:
+  - param: binary_path
+    flag: --bin
+  - param: libc_path
+    flag: --libc
+  - param: ld_path
+    flag: --ld
+  compatible_agents:
+  - binary
+  description: Set up a PWN challenge environment using pwninit. Patches binary with
+    correct linker and libc.
+  input_schema:
+    type: object
+    properties:
+      binary_path:
+        type: string
+        description: Path to the challenge binary.
+      libc_path:
+        type: string
+        description: Path to the provided libc.
+      ld_path:
+        type: string
+        description: Path to the linker (ld-linux).
+      extra_args:
+        type: string
+        description: Additional pwninit arguments.
+    required:
+    - binary_path

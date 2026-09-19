@@ -1,0 +1,49 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: gobuster_scan
+  category: web_scanning
+  requires_root: false
+  binary: gobuster
+  passive: false
+spec:
+  description: Directory and file brute-forcing using Gobuster. Supports dir, dns,
+    vhost, and fuzz modes.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL (e.g., 'http://target.com').
+      mode:
+        type: string
+        enum:
+        - dir
+        - dns
+        - vhost
+        - fuzz
+        description: 'Gobuster mode. Default: dir.'
+      wordlist:
+        type: string
+        description: 'Path to wordlist file. Default: /usr/share/wordlists/dirb/common.txt.'
+      extensions:
+        type: string
+        description: File extensions to search (e.g., 'php,html,txt').
+      threads:
+        type: integer
+        description: 'Number of concurrent threads. Default: 50.'
+      status_codes:
+        type: string
+        description: Positive status codes (e.g., '200,204,301,302').
+      exclude_length:
+        type: string
+        description: Exclude responses of this length.
+      extra_args:
+        type: string
+        description: Additional gobuster arguments.
+    required:
+    - target
+    - wordlist
+  cumulative_ceiling: 500
+  compatible_agents:
+  - webapp

@@ -1,0 +1,45 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: kubectl_exec
+  category: cloud_scanning
+  requires_root: false
+  binary: kubectl
+  passive: false
+spec:
+  flag_map:
+  - param: command
+    flag: null
+    position: head
+  - param: resource
+    flag: null
+    position: head
+  - param: name
+    flag: null
+    position: head
+  - param: namespace
+    flag: -n
+  compatible_agents:
+  - cloud
+  description: Execute Kubernetes CLI commands using kubectl. Manage and inspect pods,
+    services, deployments, and more.
+  input_schema:
+    type: object
+    properties:
+      command:
+        type: string
+        description: kubectl command (e.g., 'get', 'describe', 'exec', 'logs', 'apply').
+      resource:
+        type: string
+        description: Resource type (e.g., 'pods', 'services', 'deployments', 'secrets').
+      namespace:
+        type: string
+        description: Kubernetes namespace.
+      name:
+        type: string
+        description: Resource name.
+      extra_args:
+        type: string
+        description: Additional kubectl arguments.
+    required:
+    - command

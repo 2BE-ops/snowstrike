@@ -1,0 +1,42 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: sleuthkit_analyze
+  category: forensic_platform
+  binary: mmls
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Forensic disk analysis using The Sleuth Kit. Analyze disk images, list partitions,
+    extract files, and examine filesystem structures.
+  input_schema:
+    type: object
+    properties:
+      image_file:
+        type: string
+        description: Path to disk image file.
+      command:
+        type: string
+        enum:
+        - mmls
+        - fls
+        - icat
+        - blkcat
+        description: >-
+          Sleuth Kit command: mmls (partition layout), fls (list files), icat (extract
+          file by inode), blkcat (display block).
+      inode:
+        type: integer
+        description: Inode number for icat command.
+      offset:
+        type: integer
+        description: Partition offset in sectors.
+      extra_args:
+        type: string
+        description: Additional Sleuth Kit arguments.
+    required:
+    - image_file
+    - command
+  compatible_agents:
+  - forensics

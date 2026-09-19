@@ -1,0 +1,35 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: azure_cli_exec
+  category: cloud_scanning
+  requires_root: false
+  binary: az
+  passive: false
+spec:
+  flag_map:
+  - param: service
+    flag: null
+    position: head
+  - param: command
+    flag: null
+    position: head
+  compatible_agents:
+  - cloud
+  description: Execute Azure CLI commands. Interact with Azure services like VMs,
+    storage, AD, and more.
+  input_schema:
+    type: object
+    properties:
+      service:
+        type: string
+        description: Azure service (e.g., 'vm', 'storage', 'ad', 'network', 'keyvault').
+      command:
+        type: string
+        description: Service command (e.g., 'list', 'show', 'create').
+      extra_args:
+        type: string
+        description: Additional Azure CLI arguments.
+    required:
+    - service
+    - command

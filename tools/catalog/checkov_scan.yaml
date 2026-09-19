@@ -1,0 +1,55 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: checkov_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: checkov
+  passive: false
+spec:
+  flag_map:
+  - param: directory
+    flag: -d
+  - param: file
+    flag: -f
+  - param: framework
+    flag: --framework
+  - param: check
+    flag: --check
+  - param: skip_check
+    flag: --skip-check
+  - param: output_format
+    flag: -o
+  compatible_agents:
+  - cloud
+  description: Static analysis for infrastructure-as-code using Checkov. Scans Terraform,
+    CloudFormation, Kubernetes manifests, and more.
+  input_schema:
+    type: object
+    properties:
+      directory:
+        type: string
+        description: Directory containing IaC files.
+      file:
+        type: string
+        description: Specific file to scan.
+      framework:
+        type: string
+        description: Framework to scan (e.g., 'terraform', 'cloudformation', 'kubernetes').
+      check:
+        type: string
+        description: Specific check ID to run.
+      skip_check:
+        type: string
+        description: Check IDs to skip (comma-separated).
+      output_format:
+        type: string
+        enum:
+        - cli
+        - json
+        - sarif
+        description: Output format.
+      extra_args:
+        type: string
+        description: Additional checkov arguments.
+    required: []

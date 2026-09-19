@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Topology
+metadata:
+  name: swarm
+  description: All agents can communicate directly with each other (mesh topology)
+spec:
+  orchestrator: orchestrator
+  agents: &id001
+  - recon
+  - webapp
+  - browser
+  - attack
+  - cloud
+  - binary
+  - forensics
+  - osint
+  - reporting
+  edges:
+  - from: orchestrator
+    to: *id001
+    type: dispatch
+  - from: *id001
+    to: orchestrator
+    type: handoff
+  - from: *id001
+    to: *id001
+    type: direct_handoff

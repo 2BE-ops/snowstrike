@@ -1,0 +1,441 @@
+# SnowStrike AI - Model Cost & Capability Matrix
+# Updated: 2026-04-07
+# Prices in USD per million tokens
+#
+# Sources:
+#   Anthropic: https://platform.claude.com/docs/en/about-claude/pricing
+#   OpenAI:    https://openai.com/api/pricing/
+#   Moonshot:  https://platform.moonshot.ai/docs/pricing/chat
+
+models:
+  # =========================================================================
+  # Anthropic — Claude
+  # =========================================================================
+  claude-opus-4-6:
+    label: "Claude Opus 4.6"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    input_cost_per_mtok: 5.00
+    output_cost_per_mtok: 25.00
+    context_window: 1000000
+    thinking_capability: "full"
+    tier: "premium"
+    recommended_roles:
+      - orchestrator
+      - attack
+      - reporting
+    notes: "Most capable Anthropic model. Best for strategic planning and complex exploitation chains."
+
+  claude-sonnet-4-6:
+    label: "Claude Sonnet 4.6"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    input_cost_per_mtok: 3.00
+    output_cost_per_mtok: 15.00
+    context_window: 1000000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+      - attack
+      - cloud
+      - binary
+      - reporting
+    notes: "Best balance of capability and cost. Default tool-calling tier."
+
+  claude-haiku-4-5:
+    label: "Claude Haiku 4.5"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    model_id: "claude-haiku-4-5-20251001"
+    input_cost_per_mtok: 1.00
+    output_cost_per_mtok: 5.00
+    context_window: 200000
+    thinking_capability: "basic"
+    tier: "budget"
+    recommended_roles:
+      - alerts
+      - osint
+      - compaction
+    notes: "Fastest Anthropic model. Good for high-volume, simple tasks."
+
+  # Legacy model IDs (actual API strings)
+  claude-opus-4-20250514:
+    label: "Claude Opus 4 (legacy)"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    input_cost_per_mtok: 15.00
+    output_cost_per_mtok: 75.00
+    context_window: 200000
+    thinking_capability: "full"
+    tier: "premium-legacy"
+    recommended_roles:
+      - orchestrator
+    notes: "Previous generation Opus. 3x more expensive than Opus 4.6."
+
+  claude-sonnet-4-20250514:
+    label: "Claude Sonnet 4 (legacy)"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    input_cost_per_mtok: 3.00
+    output_cost_per_mtok: 15.00
+    context_window: 200000
+    thinking_capability: "good"
+    tier: "balanced-legacy"
+    recommended_roles:
+      - recon
+      - webapp
+      - attack
+    notes: "Previous generation Sonnet. Same pricing as 4.6 but smaller context."
+
+  claude-haiku-4-5-20251001:
+    label: "Claude Haiku 4.5"
+    provider: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+    input_cost_per_mtok: 1.00
+    output_cost_per_mtok: 5.00
+    context_window: 200000
+    thinking_capability: "basic"
+    tier: "budget"
+    recommended_roles:
+      - alerts
+      - osint
+    notes: "Budget Anthropic model."
+
+  # =========================================================================
+  # OpenAI — GPT
+  # =========================================================================
+  gpt-5.2:
+    label: "GPT-5.2"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 1.75
+    output_cost_per_mtok: 14.00
+    context_window: 400000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+      - attack
+      - reporting
+    notes: "OpenAI frontier model. 400K context, strong tool use."
+
+  gpt-5:
+    label: "GPT-5"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 1.25
+    output_cost_per_mtok: 10.00
+    context_window: 128000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+    notes: "Cheaper than 5.2 but smaller context."
+
+  gpt-5-mini:
+    label: "GPT-5 Mini"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 0.25
+    output_cost_per_mtok: 2.00
+    context_window: 128000
+    thinking_capability: "basic"
+    tier: "budget"
+    recommended_roles:
+      - osint
+      - alerts
+      - compaction
+    notes: "Cheapest OpenAI option. Good for simple tasks."
+
+  gpt-4.1:
+    label: "GPT-4.1"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 2.00
+    output_cost_per_mtok: 8.00
+    context_window: 1000000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+      - cloud
+    notes: "1M context window. Good for large output analysis."
+
+  gpt-4.1-nano:
+    label: "GPT-4.1 Nano"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 0.10
+    output_cost_per_mtok: 0.40
+    context_window: 1000000
+    thinking_capability: "basic"
+    tier: "ultra-budget"
+    recommended_roles:
+      - compaction
+      - alerts
+    notes: "Cheapest model in the matrix. 1M context. Good for compaction."
+
+  o4-mini:
+    label: "o4-mini"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 1.10
+    output_cost_per_mtok: 4.40
+    context_window: 200000
+    thinking_capability: "reasoning"
+    tier: "reasoning"
+    recommended_roles:
+      - attack
+      - binary
+    notes: "Reasoning model. Excels at step-by-step exploitation logic."
+
+  o3:
+    label: "o3"
+    provider: openai
+    api_key_env: OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"
+    input_cost_per_mtok: 10.00
+    output_cost_per_mtok: 40.00
+    context_window: 200000
+    thinking_capability: "advanced-reasoning"
+    tier: "premium"
+    recommended_roles:
+      - orchestrator
+      - attack
+    notes: "Most powerful reasoning. Very expensive — use sparingly."
+
+  # =========================================================================
+  # xAI — Grok
+  # =========================================================================
+  grok-4:
+    label: "Grok 4"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 2.00
+    output_cost_per_mtok: 10.00
+    context_window: 2000000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - orchestrator
+      - attack
+      - webapp
+      - recon
+    notes: "xAI flagship model. Strong reasoning and tool use. Supports Responses API for stateful conversations."
+
+  grok-4-fast:
+    label: "Grok 4 Fast"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 1.00
+    output_cost_per_mtok: 4.00
+    context_window: 2000000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+      - cloud
+      - osint
+    notes: "Fast variant of Grok 4. Good balance of speed and capability."
+
+  grok-4-1-fast:
+    label: "Grok 4.1 Fast"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 1.00
+    output_cost_per_mtok: 4.00
+    context_window: 2000000
+    thinking_capability: "good"
+    tier: "balanced"
+    recommended_roles:
+      - recon
+      - webapp
+      - attack
+      - cloud
+    notes: "Latest fast Grok model. Supports structured outputs with tools."
+
+  grok-4-fast-non-reasoning:
+    label: "Grok 4 Fast (Non-Reasoning)"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 0.80
+    output_cost_per_mtok: 3.00
+    context_window: 2000000
+    thinking_capability: "basic"
+    tier: "budget"
+    recommended_roles:
+      - compaction
+      - osint
+      - alerts
+    notes: "Fastest Grok variant. No reasoning overhead — ideal for compaction and simple tasks."
+
+  grok-4-1-fast-non-reasoning:
+    label: "Grok 4.1 Fast (Non-Reasoning)"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 0.80
+    output_cost_per_mtok: 3.00
+    context_window: 2000000
+    thinking_capability: "basic"
+    tier: "budget"
+    recommended_roles:
+      - compaction
+      - osint
+      - alerts
+    notes: "Latest non-reasoning Grok. Best for high-throughput simple tasks."
+
+  grok-4.20-reasoning:
+    label: "Grok 4.20 Reasoning"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 3.00
+    output_cost_per_mtok: 15.00
+    context_window: 2000000
+    thinking_capability: "advanced-reasoning"
+    tier: "premium"
+    recommended_roles:
+      - orchestrator
+      - attack
+      - binary
+    notes: >
+      Advanced reasoning model with encrypted thinking traces.
+      Supports stateful Responses API for multi-turn reasoning chains.
+      Use for complex exploitation planning and strategic decisions.
+
+  grok-4.20-multi-agent:
+    label: "Grok 4.20 Multi-Agent"
+    provider: grok
+    api_key_env: XAI_API_KEY
+    input_cost_per_mtok: 5.00
+    output_cost_per_mtok: 25.00
+    context_window: 2000000
+    thinking_capability: "multi-agent-reasoning"
+    tier: "premium"
+    recommended_roles:
+      - osint
+      - reporting
+    notes: >
+      Multi-agent research model: orchestrates 4-16 AI agents collaborating
+      in real-time. Has built-in web_search and x_search tools.
+      No client-side function calling — only built-in tools.
+      Ideal for deep OSINT research and comprehensive threat intelligence.
+      Configurable: 4 agents (fast) or 16 agents (deep research).
+
+  # =========================================================================
+  # Claude Code CLI — Subscription-based (no per-token cost)
+  # =========================================================================
+  claude-code-opus:
+    label: "Claude Opus (Code CLI)"
+    provider: claude_code
+    input_cost_per_mtok: 0.00
+    output_cost_per_mtok: 0.00
+    context_window: 1000000
+    thinking_capability: "full"
+    tier: "subscription"
+    recommended_roles:
+      - orchestrator
+      - attack
+      - reporting
+    notes: >
+      Uses Claude Code CLI with subscription auth (Pro/Max).
+      No per-token cost — included in subscription.
+      Underlying model: claude-opus-4-6.
+
+  claude-code-sonnet:
+    label: "Claude Sonnet (Code CLI)"
+    provider: claude_code
+    input_cost_per_mtok: 0.00
+    output_cost_per_mtok: 0.00
+    context_window: 1000000
+    thinking_capability: "good"
+    tier: "subscription"
+    recommended_roles:
+      - recon
+      - webapp
+      - attack
+      - cloud
+      - binary
+    notes: >
+      Uses Claude Code CLI with subscription auth (Pro/Max).
+      No per-token cost — included in subscription.
+      Underlying model: claude-sonnet-4-6.
+
+  claude-code-haiku:
+    label: "Claude Haiku (Code CLI)"
+    provider: claude_code
+    input_cost_per_mtok: 0.00
+    output_cost_per_mtok: 0.00
+    context_window: 200000
+    thinking_capability: "basic"
+    tier: "subscription"
+    recommended_roles:
+      - compaction
+      - alerts
+      - osint
+    notes: >
+      Uses Claude Code CLI with subscription auth (Pro/Max).
+      No per-token cost — included in subscription.
+      Underlying model: claude-haiku-4-5-20251001.
+
+  # =========================================================================
+  # Moonshot AI — Kimi
+  # =========================================================================
+  kimi-k2.5:
+    label: "Kimi K2.5"
+    provider: openai
+    api_key_env: MOONSHOT_API_KEY
+    base_url: "https://api.moonshot.ai/v1"
+    input_cost_per_mtok: 0.60
+    output_cost_per_mtok: 2.50
+    context_window: 131072
+    thinking_capability: "good"
+    tier: "budget"
+    recommended_roles:
+      - recon
+      - webapp
+      - osint
+      - compaction
+    notes: "Best value model overall. 5-6x cheaper than Sonnet for similar tasks."
+
+  kimi-k2-0711-preview:
+    label: "Kimi K2"
+    provider: openai
+    api_key_env: MOONSHOT_API_KEY
+    base_url: "https://api.moonshot.ai/v1"
+    input_cost_per_mtok: 0.55
+    output_cost_per_mtok: 2.20
+    context_window: 131072
+    thinking_capability: "good"
+    tier: "budget"
+    recommended_roles:
+      - compaction
+      - osint
+      - recon
+    notes: "Previous gen Kimi. Still excellent value."
+
+  kimi-k2-turbo:
+    label: "Kimi K2 Turbo"
+    provider: openai
+    api_key_env: MOONSHOT_API_KEY
+    base_url: "https://api.moonshot.ai/v1"
+    input_cost_per_mtok: 0.40
+    output_cost_per_mtok: 1.60
+    context_window: 131072
+    thinking_capability: "basic"
+    tier: "ultra-budget"
+    recommended_roles:
+      - compaction
+      - alerts
+    notes: "Fastest Kimi model. Excellent for compaction and simple tasks."

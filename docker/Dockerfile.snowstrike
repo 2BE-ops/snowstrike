@@ -1,0 +1,25 @@
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# ── Python dependencies ─────────────────────────────────────────────────────
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir . 2>/dev/null; \
+    pip install --no-cache-dir \
+    anthropic openai fastapi uvicorn python-dotenv jinja2 pydantic httpx filelock pyyaml
+
+# ── Application code ────────────────────────────────────────────────────────
+COPY . .
+
+# ── Run as non-root ─────────────────────────────────────────────────────────
+RUN groupadd -g 1000 snowstrike && \
+    useradd -u 1000 -g 1000 -m snowstrike && \
+    chown -R 1000:1000 /app
+USER 1000:1000
+
+EXPOSE 8080
+
+CMD ["python3", "-m", "dashboard.app"]

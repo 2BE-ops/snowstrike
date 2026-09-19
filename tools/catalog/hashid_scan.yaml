@@ -1,0 +1,33 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: hashid_scan
+  category: exploitation
+  requires_root: false
+  binary: hashid
+  passive: true
+spec:
+  flag_map:
+  - param: extended
+    flag: -e
+    transform: bool
+  - param: hash_value
+    flag: null
+  compatible_agents:
+  - attack
+  description: Identify the type of a hash using hashid. Detects MD5, SHA, NTLM, bcrypt,
+    and many more.
+  input_schema:
+    type: object
+    properties:
+      hash_value:
+        type: string
+        description: Hash string to identify.
+      extended:
+        type: boolean
+        description: Show extended output with hashcat/john modes.
+      extra_args:
+        type: string
+        description: Additional hashid arguments.
+    required:
+    - hash_value

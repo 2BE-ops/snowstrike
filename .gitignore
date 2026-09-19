@@ -1,0 +1,33 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+cookies.txt
+
+# Python cache and tooling state
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+snowstrike-env/
+.venv/
+venv/
+
+# Runtime logs and outputs
+*.log
+results/
+
+# Runtime engagement data
+engagements/*
+!engagements/presets/
+!engagements/presets/**
+engagements/presets/*.db
+
+# Editor / agent tooling
+.claude/
+
+# Flow runtime workspaces
+flow-workspaces/

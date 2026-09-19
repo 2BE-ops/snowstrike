@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowStrike AI - Select Engagement</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/picker.css">
+</head>
+<body>
+    <header id="header">
+        <div class="header-left">
+            <span class="brand">SnowStrike</span>
+            <span class="brand-version">v7</span>
+        </div>
+        <div class="header-right">
+        </div>
+    </header>
+
+    <main class="picker-container">
+        <div class="header-hero">
+            <h1>Engagements</h1>
+            <p>Select a penetration testing engagement or create a new one.</p>
+        </div>
+
+        <!-- New Engagement Form -->
+        <div class="new-engagement-section">
+            <form id="new-engagement-form" class="new-eng-form">
+                <input type="text" id="new-target" class="form-input" placeholder="Target IP or hostname" required>
+                <input type="text" id="new-name" class="form-input" placeholder="Engagement name (optional)">
+                <select id="new-methodology" class="form-input">
+                    <option value="standard">Standard</option>
+                    <option value="webapp">Web Application</option>
+                    <option value="network">Network</option>
+                    <option value="cloud">Cloud</option>
+                    <option value="ctf">CTF</option>
+                </select>
+                <button type="submit" class="new-eng-btn">+ New Engagement</button>
+            </form>
+        </div>
+
+        <div id="engagements-wrapper">
+            <div class="placeholder">Loading Engagements...</div>
+        </div>
+    </main>
+
+    <!-- Meta Edit Modal -->
+    <div id="meta-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 420px; width: 90vw;">
+            <div class="modal-header">
+                <span id="modal-title">Edit Engagement</span>
+                <button id="modal-close" class="icon-btn">&times;</button>
+            </div>
+            <div class="modal-body" style="white-space:normal; word-break:normal; font-family:var(--font-sans);">
+                <form id="meta-form" class="modal-form">
+                    <input type="hidden" id="edit-eng-name">
+                    <div class="form-group">
+                        <label>Group / Client Name</label>
+                        <input type="text" id="edit-group" class="form-input" placeholder="e.g. Internal Audit Q3">
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (Comma separated)</label>
+                        <input type="text" id="edit-tags" class="form-input" placeholder="e.g. high-priority, vpn, windows">
+                    </div>
+                    <button type="submit" class="new-eng-btn" style="align-self:flex-end;">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/picker.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: kube_hunter_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: kube-hunter
+  passive: false
+spec:
+  flag_map:
+  - param: target
+    flag: --remote
+  - param: active
+    flag: --active
+    transform: bool
+  - param: internal
+    flag: --internal
+    transform: bool
+  - param: network
+    flag: --network
+    transform: bool
+  - param: report
+    flag: --report
+  compatible_agents:
+  - cloud
+  description: Penetration testing tool for Kubernetes clusters. Discovers and tests
+    for security weaknesses.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or CIDR for remote scan.
+      active:
+        type: boolean
+        description: Enable active exploitation of found issues.
+      internal:
+        type: boolean
+        description: Scan from within a pod (internal scan).
+      network:
+        type: boolean
+        description: Scan the network for Kubernetes clusters.
+      report:
+        type: string
+        enum:
+        - plain
+        - json
+        - yaml
+        description: Report format.
+      extra_args:
+        type: string
+        description: Additional kube-hunter arguments.
+    required: []

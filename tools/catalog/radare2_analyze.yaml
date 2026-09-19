@@ -1,0 +1,34 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: radare2_analyze
+  category: reversing
+  binary: r2
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Analyze a binary using Radare2 reverse engineering framework. Run r2 commands
+    for disassembly, analysis, and more.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to binary file.
+      commands:
+        type: array
+        items:
+          type: string
+        description: List of r2 commands to execute (e.g., ['aaa', 'afl', 'pdf @main']).
+      write_mode:
+        type: boolean
+        description: Open in write mode (-w).
+      extra_args:
+        type: string
+        description: Additional r2 arguments.
+    required:
+    - file
+    - commands
+  compatible_agents:
+  - binary

@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: log_message
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: Write a log message visible to the orchestrator and other agents.
+  input_schema:
+    type: object
+    properties:
+      level:
+        type: string
+        enum:
+        - debug
+        - info
+        - warning
+        - error
+        description: Log level.
+      message:
+        type: string
+        description: The log message.
+      agent:
+        type: string
+        description: Agent name writing the log.
+    required:
+    - level
+    - message
+  compatible_agents:
+  - all

@@ -1,0 +1,40 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: volatility3_analyze
+  category: memory_forensics
+  requires_root: false
+  binary: vol3
+  passive: false
+spec:
+  flag_map:
+  - param: memory_dump
+    flag: -f
+  - param: plugin
+    flag: null
+  compatible_agents:
+  - forensics
+  description: Memory forensics analysis using Volatility 3. Analyze memory dumps
+    for processes, network connections, and artifacts.
+  input_schema:
+    type: object
+    properties:
+      memory_dump:
+        type: string
+        description: Path to memory dump file.
+      plugin:
+        type: string
+        description: Volatility plugin to run (e.g., 'windows.pslist', 'linux.bash',
+          'windows.netscan', 'windows.filescan').
+      output_format:
+        type: string
+        enum:
+        - json
+        - text
+        description: 'Output format. Default: text.'
+      extra_args:
+        type: string
+        description: Additional Volatility 3 arguments.
+    required:
+    - memory_dump
+    - plugin

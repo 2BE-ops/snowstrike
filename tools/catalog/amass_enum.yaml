@@ -1,0 +1,40 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: amass_enum
+  category: subdomain_enum
+  binary: amass
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Perform subdomain enumeration using Amass. Uses passive and optionally active
+    techniques.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain for enumeration.
+      mode:
+        type: string
+        enum:
+        - passive
+        - active
+        description: 'Enumeration mode. Default: passive.'
+      brute_force:
+        type: boolean
+        description: Enable brute-force subdomain guessing.
+      wordlist:
+        type: string
+        description: Path to wordlist for brute force.
+      timeout_minutes:
+        type: integer
+        description: 'Timeout in minutes. Default: 30.'
+      extra_args:
+        type: string
+        description: Additional amass arguments.
+    required:
+    - domain
+  compatible_agents:
+  - recon

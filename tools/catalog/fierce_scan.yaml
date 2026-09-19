@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: fierce_scan
+  category: dns_enumeration
+  requires_root: false
+  binary: fierce
+  passive: false
+spec:
+  flag_map:
+  - param: domain
+    flag: --domain
+  - param: dns_servers
+    flag: --dns-servers
+  - param: wordlist
+    flag: --wordlist
+  compatible_agents:
+  - recon
+  description: DNS brute-force and reconnaissance using Fierce. Discovers non-contiguous
+    IP ranges and subdomains.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      dns_servers:
+        type: string
+        description: Custom DNS server(s) to use.
+      wordlist:
+        type: string
+        description: Path to wordlist for brute force.
+      extra_args:
+        type: string
+        description: Additional fierce arguments.
+    required:
+    - domain

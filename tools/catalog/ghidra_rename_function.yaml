@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_rename_function
+  category: annotation
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /rename_function
+  http_method: POST
+spec:
+  description: Rename a function. Use to document discovered function purposes during
+    analysis.
+  input_schema:
+    type: object
+    properties:
+      old_name:
+        type: string
+        description: Current function name.
+      new_name:
+        type: string
+        description: New function name.
+    required:
+    - old_name
+    - new_name
+  compatible_agents:
+  - ghidra

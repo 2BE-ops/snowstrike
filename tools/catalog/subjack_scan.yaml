@@ -1,0 +1,38 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: subjack_scan
+  category: osint
+  requires_root: false
+  binary: subjack
+  passive: false
+spec:
+  flag_map:
+  - param: wordlist
+    flag: -w
+  - param: threads
+    flag: -t
+  - param: ssl
+    flag: -ssl
+    transform: bool
+  compatible_agents:
+  - osint
+  description: Subdomain takeover vulnerability scanner using Subjack. Checks subdomains
+    for potential takeover.
+  input_schema:
+    type: object
+    properties:
+      wordlist:
+        type: string
+        description: Path to file containing subdomains to check.
+      threads:
+        type: integer
+        description: Number of concurrent threads.
+      ssl:
+        type: boolean
+        description: Enable SSL/HTTPS connections.
+      extra_args:
+        type: string
+        description: Additional Subjack arguments.
+    required:
+    - wordlist

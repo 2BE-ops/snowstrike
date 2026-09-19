@@ -1,0 +1,55 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: forensics
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Forensics Analyst
+  description: Memory forensics, file carving, steganography, and cryptanalysis
+  agent_class: agents.forensics_agent.ForensicsAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: forensics
+  tools:
+  - volatility3_analyze
+  - foremost_carve
+  - photorec_recover
+  - testdisk_recover
+  - bulk_extractor_run
+  - steghide_extract
+  - stegsolve_analyze
+  - zsteg_analyze
+  - exiftool_read
+  - sleuthkit_analyze
+  - cyberchef_process
+  - rsatool_analyze
+  - factordb_lookup
+  capabilities:
+    skills:
+    - memory_forensics
+    - file_carving
+    - steganography_detection
+    - steganography_extraction
+    - metadata_extraction
+    - disk_forensics
+    - cryptanalysis
+    - cipher_identification
+    - frequency_analysis
+    - rsa_attacks
+    - hash_cracking
+    produces:
+    - recovered_files
+    - hidden_data
+    - memory_artifacts
+    - decrypted_data
+    - metadata
+    - forensic_timeline
+    - cryptographic_keys
+    requires:
+    - forensic_targets
+  handoff_targets:
+  - orchestrator

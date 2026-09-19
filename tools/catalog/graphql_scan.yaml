@@ -1,0 +1,27 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: graphql_scan
+  category: web_scanning
+  requires_root: false
+  binary: graphql-cop
+  passive: false
+spec:
+  flag_map:
+  - param: target
+    flag: -t
+  compatible_agents:
+  - webapp
+  description: GraphQL security testing using graphql-cop. Detects misconfigurations
+    and vulnerabilities in GraphQL endpoints.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target GraphQL endpoint URL.
+      extra_args:
+        type: string
+        description: Additional graphql-cop arguments.
+    required:
+    - target

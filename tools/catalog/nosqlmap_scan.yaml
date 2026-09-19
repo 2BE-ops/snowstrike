@@ -1,0 +1,46 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nosqlmap_scan
+  category: web_scanning
+  requires_root: false
+  binary: nosqlmap
+  passive: false
+spec:
+  flag_map:
+  - param: url
+    flag: -u
+  - param: data
+    flag: --data
+  - param: platform
+    flag: --platform
+  compatible_agents:
+  - webapp
+  description: NoSQL injection detection and exploitation using NoSQLMap. Tests for
+    MongoDB, CouchDB injection flaws.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL.
+      data:
+        type: string
+        description: POST body data.
+      method:
+        type: string
+        enum:
+        - GET
+        - POST
+        description: 'HTTP method. Default: GET.'
+      platform:
+        type: string
+        enum:
+        - MongoDB
+        - CouchDB
+        description: Target NoSQL platform.
+      extra_args:
+        type: string
+        description: Additional nosqlmap arguments.
+    required:
+    - url

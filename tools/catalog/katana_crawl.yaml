@@ -1,0 +1,47 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: katana_crawl
+  category: crawling
+  binary: katana
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    JS-aware web crawler using Katana. Discovers endpoints, forms, and JavaScript-rendered
+    content.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL to crawl.
+      depth:
+        type: integer
+        description: 'Maximum crawl depth. Default: 3.'
+      headless:
+        type: boolean
+        description: Use headless browser for JS rendering.
+      js_crawl:
+        type: boolean
+        description: Enable JavaScript crawling.
+      scope:
+        type: string
+        description: Regex pattern to define crawl scope.
+      headers:
+        type: object
+        description: 'Custom HTTP headers as key-value pairs (e.g., {"Host": "target.htb"}).'
+      output_format:
+        type: string
+        enum:
+        - json
+        - csv
+        description: Output format. json produces JSONL output, csv produces comma-separated
+          fields.
+      extra_args:
+        type: string
+        description: Additional katana arguments.
+    required:
+    - url
+  compatible_agents:
+  - webapp

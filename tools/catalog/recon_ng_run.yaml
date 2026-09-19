@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: recon_ng_run
+  category: osint_framework
+  binary: recon-ng
+  requires_root: false
+  passive: false
+spec:
+  description: OSINT reconnaissance framework. Load modules and gather intelligence
+    on targets.
+  input_schema:
+    type: object
+    properties:
+      workspace:
+        type: string
+        description: Workspace name.
+      module:
+        type: string
+        description: Module to run (e.g., 'recon/domains-hosts/hackertarget').
+      commands:
+        type: array
+        items:
+          type: string
+        description: List of recon-ng commands to execute sequentially.
+      extra_args:
+        type: string
+        description: Additional recon-ng arguments.
+    required: []
+  compatible_agents:
+  - osint

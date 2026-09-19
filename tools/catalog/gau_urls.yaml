@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: gau_urls
+  category: web_scanning
+  requires_root: false
+  binary: gau
+  passive: true
+spec:
+  flag_map:
+  - param: providers
+    flag: --providers
+  - param: blacklist
+    flag: --blacklist
+  - param: domain
+    flag: null
+  compatible_agents:
+  - webapp
+  description: Get All URLs from multiple sources (Wayback Machine, Common Crawl,
+    OTX) using gau.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      providers:
+        type: string
+        description: Comma-separated providers (wayback, commoncrawl, otx).
+      blacklist:
+        type: string
+        description: Comma-separated file extensions to exclude (e.g., 'png,jpg,gif').
+      extra_args:
+        type: string
+        description: Additional gau arguments.
+    required:
+    - domain

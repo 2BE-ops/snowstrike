@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: dnsenum_scan
+  category: dns_enumeration
+  requires_root: false
+  binary: dnsenum
+  passive: false
+spec:
+  flag_map:
+  - param: wordlist
+    flag: -f
+  - param: threads
+    flag: --threads
+  - param: domain
+    flag: null
+  compatible_agents:
+  - recon
+  description: DNS enumeration using dnsenum. Enumerates DNS records, attempts zone
+    transfers, and brute-forces subdomains.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      wordlist:
+        type: string
+        description: Path to wordlist for brute force.
+      threads:
+        type: integer
+        description: 'Number of threads. Default: 5.'
+      extra_args:
+        type: string
+        description: Additional dnsenum arguments.
+    required:
+    - domain

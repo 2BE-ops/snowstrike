@@ -1,0 +1,39 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: sslscan_scan
+  category: tls_scanning
+  requires_root: false
+  binary: sslscan
+  passive: false
+spec:
+  flag_map:
+  - param: show_certificate
+    flag: --show-certificate
+    transform: bool
+  - param: no_fallback
+    flag: --no-fallback
+    transform: bool
+  - param: target
+    flag: null
+  compatible_agents:
+  - recon
+  description: Quick SSL/TLS scan using sslscan. Checks supported ciphers, protocols,
+    and certificate information.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target host:port (e.g., 'example.com:443').
+      show_certificate:
+        type: boolean
+        description: Show full certificate details.
+      no_fallback:
+        type: boolean
+        description: Disable TLS fallback.
+      extra_args:
+        type: string
+        description: Additional sslscan arguments.
+    required:
+    - target

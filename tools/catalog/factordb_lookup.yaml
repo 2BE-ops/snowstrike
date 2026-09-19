@@ -1,0 +1,25 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: factordb_lookup
+  category: crypto
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Look up integer factorization using FactorDB. Check if a large number has known
+    prime factors.
+  input_schema:
+    type: object
+    properties:
+      number:
+        type: string
+        description: Number to look up (decimal string).
+      extra_args:
+        type: string
+        description: Additional arguments.
+    required:
+    - number
+  compatible_agents:
+  - forensics

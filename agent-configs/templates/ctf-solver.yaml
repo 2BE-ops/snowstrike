@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: ctf-solver
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: CTF Solver
+  description: Binary analysis, crypto, forensics, steganography
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: binary
+  tools:
+  - checksec_check
+  - strings_extract
+  - radare2_analyze
+  - gdb_analyze
+  - binwalk_analyze
+  - ropgadget_find
+  - steghide_extract
+  - zsteg_analyze
+  - exiftool_read
+  - cyberchef_process
+  - generic_command
+  capabilities:
+    skills:
+    - binary_analysis
+    - reverse_engineering
+    - steganography_detection
+    - cryptanalysis
+    produces:
+    - exploitable_binaries
+    - hidden_data
+    - decrypted_data
+    - cryptographic_keys
+    requires: []
+  handoff_targets:
+  - orchestrator

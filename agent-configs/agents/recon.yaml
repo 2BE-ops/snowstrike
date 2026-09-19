@@ -1,0 +1,80 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: recon
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Recon Specialist
+  description: Network reconnaissance, port scanning, service enumeration, and subdomain
+    discovery
+  agent_class: agents.recon_agent.ReconAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 3
+  prompt:
+    template: recon
+  tools:
+  - nmap_scan
+  - nmap_advanced
+  - rustscan_scan
+  - masscan_scan
+  - amass_enum
+  - subfinder_scan
+  - smbmap_scan
+  - httpx_probe
+  - whatweb_scan
+  - bloodhound_collect
+  - autorecon_scan
+  - fierce_scan
+  - dnsenum_scan
+  - arp_scan
+  - nbtscan_scan
+  - rpcclient_scan
+  - enum4linux_ng_scan
+  - smbclient_scan
+  - netexec_scan
+  - responder_scan
+  - wafw00f_scan
+  - testssl_scan
+  - sslscan_scan
+  - snmpwalk_scan
+  - onesixtyone_scan
+  capabilities:
+    skills:
+    - port_scanning
+    - service_fingerprinting
+    - dns_enumeration
+    - subdomain_discovery
+    - network_mapping
+    - os_detection
+    - smb_enumeration
+    - snmp_enumeration
+    - ssl_analysis
+    - waf_detection
+    - ad_enumeration
+    - netbios_scanning
+    - arp_discovery
+    - scan_chaining
+    - auto_handoff_generation
+    produces:
+    - open_ports
+    - service_versions
+    - hostnames
+    - subdomains
+    - network_map
+    - os_info
+    - smb_shares
+    - ssl_certificates
+    - ad_objects
+    - web_service_handoffs
+    - auth_service_handoffs
+    - ad_intelligence
+    - ssl_vulnerability_alerts
+    requires:
+    - target_hosts
+  handoff_targets:
+  - webapp
+  - attack
+  - orchestrator

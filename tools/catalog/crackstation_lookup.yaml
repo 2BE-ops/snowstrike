@@ -1,0 +1,21 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: crackstation_lookup
+  category: hash_lookup
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: Look up a hash in online rainbow tables / databases. Uses Python-based
+    lookup.
+  input_schema:
+    type: object
+    properties:
+      hash_value:
+        type: string
+        description: Hash to look up.
+    required:
+    - hash_value
+  compatible_agents:
+  - attack

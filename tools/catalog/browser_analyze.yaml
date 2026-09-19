@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: browser_analyze
+  category: analysis
+  binary: python3
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Analyze a web page for forms, JavaScript, security headers, and cookies using
+    headless Chrome.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: URL to analyze.
+      checks:
+        type: array
+        items:
+          type: string
+          enum:
+          - forms
+          - js_analysis
+          - security_headers
+          - cookies
+        description: 'List of checks to perform. Default: all.'
+    required:
+    - url
+  compatible_agents:
+  - browser

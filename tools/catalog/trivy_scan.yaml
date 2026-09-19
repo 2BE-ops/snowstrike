@@ -1,0 +1,59 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: trivy_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: trivy
+  passive: false
+spec:
+  flag_map:
+  - param: scan_type
+    flag: null
+    position: head
+  - param: target
+    flag: null
+    position: head
+  - param: severity
+    flag: --severity
+  - param: ignore_unfixed
+    flag: --ignore-unfixed
+    transform: bool
+  - param: format
+    flag: --format
+  compatible_agents:
+  - cloud
+  description: Comprehensive vulnerability scanner for containers, filesystems, and
+    IaC using Trivy.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Scan target (container image, filesystem path, or repo URL).
+      scan_type:
+        type: string
+        enum:
+        - image
+        - fs
+        - repo
+        - config
+        description: 'Type of scan. Default: image.'
+      severity:
+        type: string
+        description: Severity filter (e.g., 'CRITICAL,HIGH').
+      ignore_unfixed:
+        type: boolean
+        description: Ignore vulnerabilities without fixes.
+      format:
+        type: string
+        enum:
+        - table
+        - json
+        - sarif
+        description: 'Output format. Default: table.'
+      extra_args:
+        type: string
+        description: Additional trivy arguments.
+    required:
+    - target

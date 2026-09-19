@@ -1,0 +1,37 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: censys_search
+  category: cert_search
+  binary: censys
+  requires_root: false
+  passive: false
+spec:
+  description: Search Censys for certificates, hosts, and websites.
+  input_schema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Censys search query.
+      index:
+        type: string
+        enum:
+        - hosts
+        - certificates
+        description: 'Search index. Default: hosts.'
+      fields:
+        type: array
+        items:
+          type: string
+        description: Fields to return in results.
+      max_records:
+        type: integer
+        description: Maximum records to return.
+      extra_args:
+        type: string
+        description: Additional censys arguments.
+    required:
+    - query
+  compatible_agents:
+  - osint

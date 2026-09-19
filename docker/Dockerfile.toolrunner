@@ -1,0 +1,139 @@
+FROM kalilinux/kali-rolling
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# ── System packages: security tools ──────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv python3-dev \
+    build-essential libffi-dev libssl-dev liblzma-dev pkg-config \
+    golang-go cargo ruby ruby-dev \
+    default-jre \
+    # ── Recon & enumeration ──
+    nmap masscan \
+    amass subfinder dnsenum fierce arp-scan \
+    whatweb gobuster feroxbuster ffuf nikto nuclei wafw00f arjun \
+    # ── Web application testing ──
+    sqlmap wpscan commix \
+    testssl.sh sslscan \
+    # ── Exploitation & credential attacks ──
+    metasploit-framework hydra netexec evil-winrm patator \
+    john hashcat hashid \
+    exploitdb \
+    # ── SMB / SNMP / AD / RPC ──
+    smbmap nbtscan smbclient enum4linux-ng responder \
+    snmp onesixtyone \
+    samba-common-bin \
+    # ── Container & cloud ──
+    trivy kubectl \
+    # ── Binary analysis & RE ──
+    checksec binutils radare2 gdb ghidra binwalk \
+    # ── Forensics & recovery ──
+    foremost testdisk bulk-extractor sleuthkit \
+    # ── Steganography ──
+    steghide exiftool \
+    # ── OSINT ──
+    sherlock recon-ng theharvester spiderfoot \
+    # ── Utilities ──
+    xxd upx-ucl curl wget git jq unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Go-based tools (not in Kali repos or need latest version) ────────────────
+# Each install is separate so one failure doesn't block the rest.
+ENV GOPATH=/root/go \
+    PATH="/root/go/bin:${PATH}"
+RUN go install github.com/hahwul/dalfox/v2@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/projectdiscovery/httpx/cmd/httpx@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/projectdiscovery/katana/cmd/katana@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/lc/gau/v2/cmd/gau@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/tomnomnom/anew@latest && \
+    go install github.com/tomnomnom/qsreplace@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/haccer/subjack@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+# aquatone is unmaintained (broken xurls dep) — gowitness is the modern replacement
+RUN go install github.com/sensepost/gowitness@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+RUN go install github.com/aquasecurity/kube-bench@latest && \
+    rm -rf /root/go/pkg /root/.cache/go-build
+
+# ── Rust-based tools ─────────────────────────────────────────────────────────
+RUN cargo install rustscan && \
+    rm -rf /root/.cargo/registry /root/.cargo/git
+RUN cargo install pwninit && \
+    rm -rf /root/.cargo/registry /root/.cargo/git
+
+# ── Ruby gems ────────────────────────────────────────────────────────────────
+RUN gem install one_gadget zsteg --no-document
+
+# ── pip-installable Python tools ─────────────────────────────────────────────
+# Install known-good PyPI packages first
+RUN pip3 install --no-cache-dir --break-system-packages \
+    censys shodan \
+    ROPgadget pwntools \
+    uro prowler \
+    graphql-cop \
+    checkov kube-hunter \
+    volatility3 || true
+
+# Git-only or fragile packages — each separate so failures don't block others
+RUN pip3 install --no-cache-dir --break-system-packages \
+    git+https://github.com/devanshbatham/ParamSpider.git || true
+RUN pip3 install --no-cache-dir --break-system-packages nosqlmap || true
+RUN pip3 install --no-cache-dir --break-system-packages tplmap || true
+RUN pip3 install --no-cache-dir --break-system-packages \
+    git+https://github.com/ticarpi/jwt_tool.git || true
+RUN pip3 install --no-cache-dir --break-system-packages trufflehog || true
+RUN pip3 install --no-cache-dir --break-system-packages autorecon || true
+RUN pip3 install --no-cache-dir --break-system-packages bloodhound || true
+RUN pip3 install --no-cache-dir --break-system-packages pacu || true
+RUN pip3 install --no-cache-dir --break-system-packages scoutsuite || true
+RUN pip3 install --no-cache-dir --break-system-packages zapcli || true
+
+# ── Cloud CLIs ───────────────────────────────────────────────────────────────
+# AWS CLI v2
+RUN curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip && \
+    unzip -q /tmp/awscliv2.zip -d /tmp && \
+    /tmp/aws/install && \
+    rm -rf /tmp/aws /tmp/awscliv2.zip
+
+# Azure CLI — install in isolated venv to avoid conflicts with Kali system packages
+RUN python3 -m venv /opt/azure-cli-venv && \
+    /opt/azure-cli-venv/bin/pip install --no-cache-dir azure-cli && \
+    ln -sf /opt/azure-cli-venv/bin/az /usr/local/bin/az
+
+# Google Cloud SDK
+RUN curl -fsSL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz | \
+    tar -xz -C /opt && \
+    /opt/google-cloud-sdk/install.sh --quiet --path-update true && \
+    ln -sf /opt/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
+
+# ── Neo4j cypher-shell (for BloodHound AD queries) ──────────────────────────
+RUN curl -fsSL "https://dist.neo4j.org/cypher-shell/cypher-shell-5.26.0.zip" -o /tmp/cypher-shell.zip && \
+    unzip -q /tmp/cypher-shell.zip -d /opt && \
+    ln -sf /opt/cypher-shell/bin/cypher-shell /usr/local/bin/cypher-shell && \
+    rm -f /tmp/cypher-shell.zip
+
+# ── Runtime security (falco, docker-bench-security) ─────────────────────────
+RUN git clone --depth 1 https://github.com/docker/docker-bench-security.git /opt/docker-bench-security && \
+    ln -sf /opt/docker-bench-security/docker-bench-security.sh /usr/local/bin/docker-bench-security
+
+WORKDIR /app
+
+# ── Python venv for the tool-runner server (isolates from Kali apt packages) ─
+RUN python3 -m venv /app/venv
+ENV PATH="/app/venv/bin:/root/go/bin:/root/.cargo/bin:${PATH}"
+RUN pip install --no-cache-dir fastapi uvicorn pydantic httpx
+
+# ── Copy only the code needed for the tool-runner ───────────────────────────
+COPY tools/ ./tools/
+COPY tool_runner/ ./tool_runner/
+
+EXPOSE 9090
+
+CMD ["python3", "-m", "tool_runner.server"]

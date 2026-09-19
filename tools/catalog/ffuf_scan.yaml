@@ -1,0 +1,68 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ffuf_scan
+  category: fuzzing
+  binary: ffuf
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Fast web fuzzer using ffuf. Supports directory discovery, parameter fuzzing, header
+    fuzzing, and more.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL with FUZZ keyword (e.g., 'http://target.com/FUZZ').
+      wordlist:
+        type: string
+        description: Path to wordlist for the FUZZ keyword.
+      method:
+        type: string
+        enum:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        description: 'HTTP method. Default: GET.'
+      headers:
+        type: object
+        description: Custom headers as key-value pairs.
+      data:
+        type: string
+        description: POST data (can contain FUZZ keyword).
+      filter_code:
+        type: string
+        description: Filter out status codes (e.g., '404,403').
+      filter_size:
+        type: string
+        description: Filter out response sizes.
+      filter_words:
+        type: string
+        description: Filter out responses with this word count.
+      match_code:
+        type: string
+        description: Match only these status codes.
+      threads:
+        type: integer
+        description: 'Number of threads. Default: 40.'
+      rate:
+        type: integer
+        description: Rate limit (requests per second).
+      recursion:
+        type: boolean
+        description: Enable recursion.
+      recursion_depth:
+        type: integer
+        description: Recursion depth limit.
+      extra_args:
+        type: string
+        description: Additional ffuf arguments.
+    required:
+    - url
+    - wordlist
+  compatible_agents:
+  - webapp

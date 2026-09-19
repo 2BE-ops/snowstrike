@@ -1,0 +1,57 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: john_crack
+  category: credential_cracking
+  requires_root: false
+  binary: john
+  passive: false
+spec:
+  flag_map:
+  - param: wordlist
+    flag: --wordlist=
+    join: true
+  - param: format
+    flag: --format=
+    join: true
+  - param: rules
+    flag: --rules=
+    join: true
+  - param: incremental
+    flag: --incremental
+    transform: bool
+  - param: show
+    flag: --show
+    transform: bool
+  - param: hash_file
+    flag: null
+  compatible_agents:
+  - attack
+  description: Password cracker using John the Ripper. Supports many hash formats
+    and attack modes.
+  input_schema:
+    type: object
+    properties:
+      hash_file:
+        type: string
+        description: Path to file containing hashes.
+      wordlist:
+        type: string
+        description: Path to wordlist file.
+      format:
+        type: string
+        description: Hash format (e.g., 'raw-md5', 'raw-sha256', 'bcrypt', 'ntlm').
+      rules:
+        type: string
+        description: Word mangling rules (e.g., 'best64', 'rockyou-30000').
+      incremental:
+        type: boolean
+        description: Use incremental (brute-force) mode.
+      show:
+        type: boolean
+        description: Show cracked passwords.
+      extra_args:
+        type: string
+        description: Additional john arguments.
+    required:
+    - hash_file

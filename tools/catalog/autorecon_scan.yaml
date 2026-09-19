@@ -1,0 +1,38 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: autorecon_scan
+  category: auto_recon
+  binary: autorecon
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Automated reconnaissance using AutoRecon. Runs multiple tools against a target
+    to enumerate services and vulnerabilities.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP or hostname.
+      profile:
+        type: string
+        enum:
+        - default
+        - htb
+        - quick
+        description: 'Scan profile. Default: default.'
+      output_dir:
+        type: string
+        description: Output directory for results.
+      ports:
+        type: string
+        description: Port specification (e.g., '80,443,8080').
+      extra_args:
+        type: string
+        description: Additional autorecon arguments.
+    required:
+    - target
+  compatible_agents:
+  - recon

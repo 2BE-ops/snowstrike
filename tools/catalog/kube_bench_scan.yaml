@@ -1,0 +1,47 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: kube_bench_scan
+  category: cloud_scanning
+  requires_root: false
+  binary: kube-bench
+  passive: false
+spec:
+  flag_map:
+  - param: target_type
+    flag: --targets
+  - param: benchmark
+    flag: --benchmark
+  - param: check
+    flag: --check
+  - param: json_output
+    flag: --json
+    transform: bool
+  compatible_agents:
+  - cloud
+  description: CIS Kubernetes Benchmark scanner. Checks Kubernetes cluster configuration
+    against security best practices.
+  input_schema:
+    type: object
+    properties:
+      target_type:
+        type: string
+        enum:
+        - master
+        - node
+        - etcd
+        - policies
+        description: Node type to check.
+      benchmark:
+        type: string
+        description: CIS benchmark version (e.g., 'cis-1.6').
+      check:
+        type: string
+        description: Specific check number (e.g., '1.1.1').
+      json_output:
+        type: boolean
+        description: Output in JSON format.
+      extra_args:
+        type: string
+        description: Additional kube-bench arguments.
+    required: []

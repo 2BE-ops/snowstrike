@@ -1,0 +1,38 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: passive-recon
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Passive Recon
+  description: OSINT, breach analysis, DNS history (no active scanning)
+  model: claude-sonnet-4-20250514
+  max_turns: 25
+  max_concurrent: 1
+  prompt:
+    template: osint
+  tools:
+  - sherlock_search
+  - shodan_search
+  - censys_search
+  - theharvester_scan
+  - haveibeenpwned_check
+  - trufflehog_scan
+  capabilities:
+    skills:
+    - email_harvesting
+    - credential_leak_search
+    - technology_fingerprinting
+    produces:
+    - email_addresses
+    - leaked_credentials
+    - technology_stack
+    requires:
+    - target_domains
+    - target_organization
+  handoff_targets:
+  - recon
+  - webapp
+  - orchestrator

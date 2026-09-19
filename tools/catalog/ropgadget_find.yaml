@@ -1,0 +1,54 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ropgadget_find
+  category: binary_analysis
+  requires_root: false
+  binary: ROPgadget
+  passive: false
+spec:
+  flag_map:
+  - param: file
+    flag: --binary
+  - param: ropchain
+    flag: --ropchain
+    transform: bool
+  - param: depth
+    flag: --depth
+  - param: filter
+    flag: --filter
+  - param: only
+    flag: --only
+  - param: badbytes
+    flag: --badbytes
+  compatible_agents:
+  - binary
+  description: Find ROP gadgets in a binary using ROPgadget. Useful for exploit development
+    and ROP chain building.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to binary file.
+      ropchain:
+        type: boolean
+        description: Generate a ROP chain automatically.
+      depth:
+        type: integer
+        description: 'Maximum gadget depth. Default: 10.'
+      filter:
+        type: string
+        description: Filter gadgets by regex pattern.
+      only:
+        type: string
+        description: Only show gadgets containing specific instruction (e.g., 'jmp
+          rsp').
+      badbytes:
+        type: string
+        description: Bad bytes to avoid in addresses (e.g., '00|0a|0d').
+      extra_args:
+        type: string
+        description: Additional ROPgadget arguments.
+    required:
+    - file

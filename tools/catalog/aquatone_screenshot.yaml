@@ -1,0 +1,34 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: aquatone_screenshot
+  category: visual_recon
+  binary: gowitness
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Web screenshot and visual recon tool using Aquatone. Takes screenshots of web
+    pages for visual analysis.
+  input_schema:
+    type: object
+    properties:
+      input_file:
+        type: string
+        description: File containing URLs to screenshot.
+      ports:
+        type: string
+        description: Comma-separated ports to check (e.g., '80,443,8080').
+      threads:
+        type: integer
+        description: Number of concurrent threads.
+      output_dir:
+        type: string
+        description: Output directory for screenshots and report.
+      extra_args:
+        type: string
+        description: Additional aquatone arguments.
+    required:
+    - input_file
+  compatible_agents:
+  - webapp

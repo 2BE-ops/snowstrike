@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: bulk_extractor_run
+  category: file_recovery
+  binary: bulk_extractor
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Bulk data extraction tool using bulk_extractor. Extract email addresses, URLs,
+    credit card numbers, and other artifacts from disk images.
+  input_schema:
+    type: object
+    properties:
+      image_file:
+        type: string
+        description: Path to disk image or file to analyze.
+      output_dir:
+        type: string
+        description: Output directory for extracted data.
+      scanners:
+        type: string
+        description: Comma-separated list of scanners to enable (e.g., 'email,url,ccn').
+      extra_args:
+        type: string
+        description: Additional bulk_extractor arguments.
+    required:
+    - image_file
+    - output_dir
+  compatible_agents:
+  - forensics

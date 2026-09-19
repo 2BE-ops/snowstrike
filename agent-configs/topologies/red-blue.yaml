@@ -1,0 +1,41 @@
+apiVersion: snowstrike/v1
+kind: Topology
+metadata:
+  name: red-blue
+  description: Red team (recon→attack) and blue team (forensics→reporting) with orchestrator
+    coordinating both
+spec:
+  orchestrator: orchestrator
+  agents:
+  - recon
+  - webapp
+  - attack
+  - forensics
+  - reporting
+  edges:
+  - from: orchestrator
+    to:
+    - recon
+    - webapp
+    - attack
+    - forensics
+    - reporting
+    type: dispatch
+  - from: recon
+    to:
+    - webapp
+    - attack
+    type: direct_handoff
+  - from: webapp
+    to:
+    - attack
+    type: direct_handoff
+  - from:
+    - attack
+    - forensics
+    to: orchestrator
+    type: handoff
+  - from: forensics
+    to:
+    - reporting
+    type: direct_handoff

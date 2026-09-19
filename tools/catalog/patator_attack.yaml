@@ -1,0 +1,40 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: patator_attack
+  category: brute_force
+  binary: patator
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Multi-purpose brute-forcer using Patator. Supports SSH, FTP, HTTP, and many other
+    protocols.
+  input_schema:
+    type: object
+    properties:
+      module:
+        type: string
+        description: >-
+          Patator module (e.g., 'ssh_login', 'ftp_login', 'http_fuzz', 'smtp_login',
+          'pop_login').
+      target:
+        type: string
+        description: Target host or URL.
+      port:
+        type: integer
+        description: Target port.
+      username:
+        type: string
+        description: Single username or FILE0 reference.
+      password_file:
+        type: string
+        description: Path to password wordlist.
+      extra_args:
+        type: string
+        description: Additional patator arguments.
+    required:
+    - module
+    - target
+  compatible_agents:
+  - attack

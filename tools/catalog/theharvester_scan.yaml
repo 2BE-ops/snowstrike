@@ -1,0 +1,55 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: theharvester_scan
+  category: osint
+  requires_root: false
+  binary: theHarvester
+  passive: false
+spec:
+  flag_map:
+  - param: domain
+    flag: -d
+  - param: sources
+    flag: -b
+  - param: limit
+    flag: -l
+  - param: start
+    flag: -S
+  - param: shodan
+    flag: -s
+    transform: bool
+  - param: dns_brute
+    flag: -c
+    transform: bool
+  compatible_agents:
+  - osint
+  description: Gather emails, subdomains, hosts, employee names, open ports, and banners
+    from public sources using theHarvester.
+  input_schema:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: Target domain.
+      sources:
+        type: string
+        description: 'Data sources to use (e.g., ''google,bing,linkedin,shodan'').
+          Default: all.'
+      limit:
+        type: integer
+        description: 'Limit the number of search results. Default: 500.'
+      start:
+        type: integer
+        description: Start with result number X.
+      shodan:
+        type: boolean
+        description: Use Shodan to query discovered hosts.
+      dns_brute:
+        type: boolean
+        description: Perform DNS brute force.
+      extra_args:
+        type: string
+        description: Additional theHarvester arguments.
+    required:
+    - domain

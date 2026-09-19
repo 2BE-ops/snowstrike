@@ -1,0 +1,46 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: nuclei_scan
+  category: web_scanning
+  requires_root: false
+  binary: nuclei
+  passive: false
+spec:
+  description: Fast vulnerability scanner using Nuclei templates. Scans for CVEs,
+    misconfigurations, default credentials, and more.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target URL.
+      targets_file:
+        type: string
+        description: Path to file with list of targets.
+      templates:
+        type: string
+        description: Specific template or directory to use.
+      tags:
+        type: string
+        description: Filter templates by tags (e.g., 'cve,rce,sqli').
+      severity:
+        type: string
+        description: Filter by severity (e.g., 'critical,high').
+      rate_limit:
+        type: integer
+        description: Max requests per second.
+      concurrency:
+        type: integer
+        description: Number of concurrent templates.
+      header:
+        type: string
+        description: 'Custom header (e.g., ''Authorization: Bearer token'').'
+      extra_args:
+        type: string
+        description: Additional nuclei arguments.
+    required:
+    - target
+  cumulative_ceiling: 500
+  compatible_agents:
+  - webapp

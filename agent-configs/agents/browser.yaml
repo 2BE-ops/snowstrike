@@ -1,0 +1,57 @@
+apiVersion: snowstrike/v1
+kind: Agent
+metadata:
+  name: browser
+  version: 1
+  created: '2026-04-09T15:38:22Z'
+  author: system
+spec:
+  display_name: Browser Agent
+  description: Headless browser automation for DOM analysis, screenshot capture, and
+    JavaScript security analysis
+  agent_class: agents.browser_agent.BrowserAgent
+  model: claude-sonnet-4-20250514
+  max_turns: 30
+  max_concurrent: 1
+  prompt:
+    template: browser
+  tools:
+  - browser_navigate
+  - browser_screenshot
+  - browser_analyze
+  - browser_network_monitor
+  - browser_crawl
+  capabilities:
+    skills:
+    - headless_navigation
+    - screenshot_capture
+    - dom_analysis
+    - network_monitoring
+    - security_header_analysis
+    - form_detection
+    - cookie_analysis
+    - javascript_analysis
+    - multi_page_crawling
+    - api_endpoint_discovery
+    - csp_analysis
+    - cors_analysis
+    - mixed_content_detection
+    - supply_chain_analysis
+    produces:
+    - screenshots
+    - dom_structures
+    - network_traffic
+    - security_headers
+    - security_header_findings
+    - form_inventory
+    - cookie_findings
+    - api_endpoints
+    - javascript_frameworks
+    - csp_weaknesses
+    - cors_misconfigurations
+    requires:
+    - target_hosts
+    - web_services
+  handoff_targets:
+  - webapp
+  - orchestrator

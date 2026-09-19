@@ -1,0 +1,45 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: masscan_scan
+  category: port_scanning
+  requires_root: true
+  binary: masscan
+  passive: false
+spec:
+  flag_map:
+  - param: ports
+    flag: -p
+  - param: rate
+    flag: --rate
+  - param: banners
+    flag: --banners
+    transform: bool
+  - param: target
+    flag: null
+    position: head
+  compatible_agents:
+  - recon
+  description: Ultra-fast network scanner using Masscan. Suitable for scanning large
+    IP ranges at high speed.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target IP, CIDR range, or range (e.g., '10.0.0.0/8').
+      ports:
+        type: string
+        description: Port specification (e.g., '0-65535', '80,443,8080').
+      rate:
+        type: integer
+        description: 'Packets per second. Default: 1000.'
+      banners:
+        type: boolean
+        description: Grab banners from open ports.
+      extra_args:
+        type: string
+        description: Additional masscan arguments.
+    required:
+    - target
+    - ports

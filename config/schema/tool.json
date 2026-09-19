@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SnowStrike Tool Configuration",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "snowstrike/v1"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Tool"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "category"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Unique tool identifier"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "network_scanning", "web_scanning", "web_fuzzing", "injection_testing",
+            "exploitation", "credential_attack", "privilege_escalation",
+            "binary_analysis", "cloud_audit", "forensics", "osint",
+            "browser_automation", "utility", "shared"
+          ]
+        },
+        "requires_root": {
+          "type": "boolean",
+          "default": false
+        },
+        "binary": {
+          "type": "string",
+          "description": "Primary executable binary name"
+        },
+        "passive": {
+          "type": "boolean",
+          "default": false,
+          "description": "True if tool does not actively probe the target"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["description", "input_schema"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "input_schema": {
+          "type": "object",
+          "description": "JSON Schema for tool input parameters"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Default execution timeout in seconds"
+        },
+        "cumulative_ceiling": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum cumulative execution time in seconds per agent session"
+        },
+        "compatible_agents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Agent types that can use this tool"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+services:
+  snowstrike:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.snowstrike
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SNOWSTRIKE_TOOL_RUNNER_URL=http://tool-runner:9090
+      - GHIDRA_MCP_URL=http://ghidra-mcp:8089
+    volumes:
+      - engagements:/app/engagements
+    depends_on:
+      - tool-runner
+      - ghidra-mcp
+    restart: unless-stopped
+    mem_limit: 4g
+    cpus: 2
+
+  ghidra-mcp:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ghidra
+    # Expose only on loopback — not accessible from the network
+    ports:
+      - "127.0.0.1:8089:8089"
+    volumes:
+      - engagements:/app/engagements
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/check_connection"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    mem_limit: 4g
+    cpus: 2
+
+  tool-runner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.toolrunner
+    env_file:
+      - .env
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_PTRACE
+    volumes:
+      - engagements:/app/engagements
+    restart: unless-stopped
+    mem_limit: 8g
+    cpus: 4
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  engagements:

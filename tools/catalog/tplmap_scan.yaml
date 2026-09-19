@@ -1,0 +1,47 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: tplmap_scan
+  category: web_scanning
+  requires_root: false
+  binary: tplmap
+  passive: false
+spec:
+  flag_map:
+  - param: url
+    flag: -u
+  - param: data
+    flag: -d
+  - param: cookie
+    flag: -c
+  - param: engine
+    flag: -e
+  - param: os_cmd
+    flag: --os-cmd
+  compatible_agents:
+  - webapp
+  description: Server-Side Template Injection (SSTI) detection and exploitation using
+    tplmap.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL with injectable parameter.
+      data:
+        type: string
+        description: POST data.
+      cookie:
+        type: string
+        description: HTTP cookie string.
+      engine:
+        type: string
+        description: Template engine to test (e.g., 'jinja2', 'mako', 'twig', 'smarty').
+      os_cmd:
+        type: string
+        description: OS command to execute upon successful exploitation.
+      extra_args:
+        type: string
+        description: Additional tplmap arguments.
+    required:
+    - url

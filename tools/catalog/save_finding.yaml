@@ -1,0 +1,64 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: save_finding
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Save a security finding discovered during the engagement. Findings are persisted
+    to shared state so all agents can see them.
+  input_schema:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Short title of the finding (e.g., 'Open SSH on port 22').
+      severity:
+        type: string
+        enum:
+        - critical
+        - high
+        - medium
+        - low
+        - info
+        description: Severity rating of the finding.
+      category:
+        type: string
+        description: >-
+          Category such as 'open_port', 'vulnerability', 'misconfiguration', 'credential',
+          'sensitive_data'.
+      description:
+        type: string
+        description: Detailed description of the finding including evidence.
+      target:
+        type: string
+        description: The target IP, hostname, or URL this finding applies to.
+      evidence:
+        type: string
+        description: Raw evidence such as tool output snippets that support this finding.
+      remediation:
+        type: string
+        description: Suggested remediation steps.
+      cvss_score:
+        type: number
+        description: CVSS score if applicable (0.0 - 10.0).
+      cve_ids:
+        type: array
+        items:
+          type: string
+        description: List of CVE identifiers if applicable.
+      tags:
+        type: array
+        items:
+          type: string
+        description: Arbitrary tags for filtering and grouping.
+    required:
+    - title
+    - severity
+    - category
+    - description
+    - target
+  compatible_agents:
+  - all

@@ -1,0 +1,26 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: ghidra_list_functions
+  category: function_analysis
+  requires_root: false
+  passive: false
+  transport: http
+  endpoint: /list_functions
+  http_method: GET
+spec:
+  description: >-
+    List all functions in the program. Supports pagination via offset and limit. Returns
+    function name, address, and size.
+  input_schema:
+    type: object
+    properties:
+      offset:
+        type: integer
+        description: 'Start index for pagination. Default: 0.'
+      limit:
+        type: integer
+        description: 'Maximum number of functions to return. Default: 100.'
+    required: []
+  compatible_agents:
+  - ghidra

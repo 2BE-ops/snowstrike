@@ -1,0 +1,36 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: read_shared_state
+  category: shared
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Read the current shared state. Returns findings, network map, and agent-contributed
+    data visible to all agents.
+  input_schema:
+    type: object
+    properties:
+      section:
+        type: string
+        description: >-
+          Which section of shared state to read. Available sections: engagement, hosts,
+          domains, technologies, credentials_summary, vulns_summary, attack_surfaces,
+          current_phase, completed_phases, agent_notes. Omit or pass 'all' to read
+          the full state.
+      filter_severity:
+        type: string
+        enum:
+        - critical
+        - high
+        - medium
+        - low
+        - info
+        description: Filter findings by minimum severity.
+      filter_target:
+        type: string
+        description: Filter data related to a specific target.
+    required: []
+  compatible_agents:
+  - all

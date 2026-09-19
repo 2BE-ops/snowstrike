@@ -1,0 +1,6 @@
+description: Default prompts (copy of agents/prompts/)
+created_date: '2026-04-09'
+author: system
+tags:
+- default
+source: agents/prompts

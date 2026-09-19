@@ -1,0 +1,31 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: msfconsole_run
+  category: exploitation
+  requires_root: false
+  binary: msfconsole
+  passive: false
+spec:
+  description: Execute a Metasploit Framework command or resource script via msfconsole.
+  input_schema:
+    type: object
+    properties:
+      command:
+        type: string
+        description: Metasploit command to execute (e.g., 'use exploit/multi/handler;
+          set PAYLOAD ...').
+      resource_file:
+        type: string
+        description: Path to a Metasploit resource (.rc) file to execute.
+      quiet:
+        type: boolean
+        description: 'Suppress banner output. Default: true.'
+      extra_args:
+        type: string
+        description: Additional msfconsole arguments.
+    required: []
+  timeout: 420
+  cumulative_ceiling: 600
+  compatible_agents:
+  - attack

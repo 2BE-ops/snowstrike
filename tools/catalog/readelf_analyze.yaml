@@ -1,0 +1,46 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: readelf_analyze
+  category: binary_analysis
+  binary: readelf
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Display information about ELF files using readelf. Shows headers, sections, symbols,
+    and dynamic linking info.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to ELF file.
+      all:
+        type: boolean
+        description: Show all information (-a).
+      headers:
+        type: boolean
+        description: Show file header (-h).
+      sections:
+        type: boolean
+        description: Show section headers (-S).
+      symbols:
+        type: boolean
+        description: Show symbol table (-s).
+      dynamic:
+        type: boolean
+        description: Show dynamic section (-d).
+      relocs:
+        type: boolean
+        description: Show relocations (-r).
+      notes:
+        type: boolean
+        description: Show notes (-n).
+      extra_args:
+        type: string
+        description: Additional readelf arguments.
+    required:
+    - file
+  compatible_agents:
+  - binary

@@ -1,0 +1,46 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: objdump_disasm
+  category: binary_analysis
+  binary: objdump
+  requires_root: false
+  passive: false
+spec:
+  description: >-
+    Disassemble a binary file using objdump. Shows assembly instructions, sections,
+    symbols, and headers.
+  input_schema:
+    type: object
+    properties:
+      file:
+        type: string
+        description: Path to binary file.
+      disassemble:
+        type: boolean
+        description: 'Disassemble executable sections (-d). Default: true.'
+      disassemble_all:
+        type: boolean
+        description: Disassemble all sections (-D).
+      headers:
+        type: boolean
+        description: Display section headers (-h).
+      symbols:
+        type: boolean
+        description: Display symbol table (-t).
+      reloc:
+        type: boolean
+        description: Display relocation entries (-r).
+      intel_syntax:
+        type: boolean
+        description: 'Use Intel syntax. Default: true.'
+      section:
+        type: string
+        description: Specific section to disassemble (e.g., '.text').
+      extra_args:
+        type: string
+        description: Additional objdump arguments.
+    required:
+    - file
+  compatible_agents:
+  - binary

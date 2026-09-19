@@ -1,0 +1,104 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: sqlmap_scan
+  category: web_scanning
+  requires_root: false
+  binary: sqlmap
+  passive: false
+spec:
+  flag_map:
+  - param: url
+    flag: -u
+  - param: data
+    flag: --data
+  - param: cookie
+    flag: --cookie
+  - param: method
+    flag: --method
+  - param: param
+    flag: -p
+  - param: dbms
+    flag: --dbms
+  - param: level
+    flag: --level
+  - param: risk
+    flag: --risk
+  - param: technique
+    flag: --technique
+  - param: dump
+    flag: --dump
+    transform: bool
+  - param: tables
+    flag: --tables
+    transform: bool
+  - param: dbs
+    flag: --dbs
+    transform: bool
+  - param: batch
+    flag: --batch
+    transform: bool
+  - param: tamper
+    flag: --tamper
+  compatible_agents:
+  - webapp
+  description: Automated SQL injection detection and exploitation using SQLMap.
+  input_schema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Target URL with parameter (e.g., 'http://target.com/page?id=1').
+      data:
+        type: string
+        description: POST data string (e.g., 'user=admin&pass=test').
+      cookie:
+        type: string
+        description: HTTP Cookie header value.
+      method:
+        type: string
+        enum:
+        - GET
+        - POST
+        - PUT
+        description: HTTP method to use.
+      param:
+        type: string
+        description: Specific parameter to test.
+      dbms:
+        type: string
+        description: Backend DBMS (e.g., 'MySQL', 'PostgreSQL', 'MSSQL').
+      level:
+        type: integer
+        minimum: 1
+        maximum: 5
+        description: 'Test level (1-5). Higher = more tests. Default: 1.'
+      risk:
+        type: integer
+        minimum: 1
+        maximum: 3
+        description: 'Risk level (1-3). Higher = more risky tests. Default: 1.'
+      technique:
+        type: string
+        description: SQL injection techniques (B=Boolean, E=Error, U=Union, S=Stacked,
+          T=Time, Q=Inline).
+      dump:
+        type: boolean
+        description: Dump database table entries.
+      tables:
+        type: boolean
+        description: Enumerate tables.
+      dbs:
+        type: boolean
+        description: Enumerate databases.
+      batch:
+        type: boolean
+        description: 'Never ask for user input, use default. Default: true.'
+      tamper:
+        type: string
+        description: Tamper script(s) for payload encoding.
+      extra_args:
+        type: string
+        description: Additional sqlmap arguments.
+    required:
+    - url

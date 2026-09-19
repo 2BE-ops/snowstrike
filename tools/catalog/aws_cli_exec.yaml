@@ -1,0 +1,36 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: aws_cli_exec
+  category: cloud_scanning
+  requires_root: false
+  binary: aws
+  passive: false
+spec:
+  flag_map:
+  - param: service
+    flag: null
+    position: head
+  - param: command
+    flag: null
+    position: head
+  compatible_agents:
+  - cloud
+  description: Execute AWS CLI commands. Interact with AWS services like S3, EC2,
+    IAM, STS, and more.
+  input_schema:
+    type: object
+    properties:
+      service:
+        type: string
+        description: AWS service (e.g., 's3', 'ec2', 'iam', 'sts', 'lambda', 'rds').
+      command:
+        type: string
+        description: Service command (e.g., 'ls', 'describe-instances', 'list-users',
+          'get-caller-identity').
+      extra_args:
+        type: string
+        description: Additional AWS CLI arguments.
+    required:
+    - service
+    - command

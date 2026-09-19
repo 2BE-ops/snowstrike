@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowStrike AI — Agent Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/builder.css">
+</head>
+<body>
+    <!-- ═══ HEADER ═══ -->
+    <header id="header">
+        <div class="header-left">
+            <a href="/" style="text-decoration:none"><span class="brand">SnowStrike</span></a>
+            <span class="brand-version">v7</span>
+            <span class="header-sep">|</span>
+            <span class="header-target">Agent Builder</span>
+        </div>
+        <div class="header-right">
+            <a href="/" class="icon-btn" title="Dashboard" style="text-decoration:none;color:inherit">&#8962;</a>
+        </div>
+    </header>
+
+    <!-- ═══ MAIN LAYOUT ═══ -->
+    <div class="builder-container">
+        <!-- Left: Tool Marketplace -->
+        <div class="builder-marketplace" id="marketplace">
+            <div class="marketplace-header">
+                <h3>Tool Marketplace</h3>
+                <button class="sidebar-close" id="toggleMarketplace" title="Toggle marketplace">&#x2630;</button>
+            </div>
+            <div class="marketplace-search">
+                <input type="text" id="toolSearch" placeholder="Search tools...">
+            </div>
+            <div class="marketplace-filters">
+                <select id="categoryFilter">
+                    <option value="">All categories</option>
+                    <option value="network_scanning">Network</option>
+                    <option value="web_scanning">Web</option>
+                    <option value="web_fuzzing">Fuzzing</option>
+                    <option value="injection_testing">Injection</option>
+                    <option value="exploitation">Exploitation</option>
+                    <option value="credential_attack">Credentials</option>
+                    <option value="binary_analysis">Binary</option>
+                    <option value="cloud_audit">Cloud</option>
+                    <option value="forensics">Forensics</option>
+                    <option value="osint">OSINT</option>
+                    <option value="browser_automation">Browser</option>
+                    <option value="utility">Utility</option>
+                </select>
+                <select id="rootFilter">
+                    <option value="">Root: Any</option>
+                    <option value="true">Root required</option>
+                    <option value="false">No root</option>
+                </select>
+            </div>
+            <div class="marketplace-tools" id="toolsList"></div>
+        </div>
+
+        <!-- Center: Canvas -->
+        <div class="builder-canvas-area">
+            <div class="builder-toolbar">
+                <button id="toggleMarketplaceBtn" title="Toggle tool marketplace">&#x2630;</button>
+                <span class="toolbar-label">Topology:</span>
+                <select id="topologySelect">
+                    <option value="">Loading...</option>
+                </select>
+                <button id="btnNewAgent" class="btn-primary">+ New Agent</button>
+                <button id="btnTemplates">Templates</button>
+                <div class="toolbar-spacer"></div>
+                <button id="btnValidate">Validate</button>
+                <button id="btnReload" class="btn-primary">Reload</button>
+            </div>
+            <div id="builderCanvas"></div>
+            <div class="builder-validation" id="validationPanel">
+                <div class="validation-header">
+                    <span id="validationStatus"></span>
+                    <div class="toolbar-spacer"></div>
+                    <button class="sidebar-close" id="closeValidation">&times;</button>
+                </div>
+                <div class="validation-list" id="validationList"></div>
+            </div>
+        </div>
+
+        <!-- Right: Config Sidebar -->
+        <div class="builder-sidebar" id="configSidebar">
+            <div class="sidebar-header">
+                <h3 id="sidebarAgentName">Agent Config</h3>
+                <button class="sidebar-close" id="closeSidebar">&times;</button>
+            </div>
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-tab="general">General</button>
+                <button class="sidebar-tab" data-tab="prompt">Prompt</button>
+                <button class="sidebar-tab" data-tab="tools">Tools</button>
+                <button class="sidebar-tab" data-tab="caps">Capabilities</button>
+            </div>
+            <div class="sidebar-content">
+                <!-- General Tab -->
+                <div class="tab-panel active" id="tab-general">
+                    <div class="form-group">
+                        <label>Display Name</label>
+                        <input type="text" id="cfgDisplayName">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="cfgDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <select id="cfgModel">
+                            <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+                            <option value="claude-opus-4-20250514">Claude Opus 4</option>
+                            <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+                            <option value="claude-opus-4-6">Claude Opus 4.6</option>
+                            <option value="gpt-5.2">GPT-5.2</option>
+                            <option value="gpt-5">GPT-5</option>
+                            <option value="grok-4-1-fast">Grok 4.1 Fast</option>
+                            <option value="kimi-k2-0711-preview">Kimi K2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Turns: <span id="cfgMaxTurnsVal">30</span></label>
+                        <input type="range" id="cfgMaxTurns" min="5" max="60" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Concurrent</label>
+                        <input type="number" id="cfgMaxConcurrent" min="1" max="10" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Agent Class (optional)</label>
+                        <input type="text" id="cfgAgentClass" placeholder="e.g. agents.recon_agent.ReconAgent">
+                    </div>
+                </div>
+
+                <!-- Prompt Tab -->
+                <div class="tab-panel" id="tab-prompt">
+                    <div class="form-group">
+                        <label>Prompt Template</label>
+                        <select id="cfgPromptTemplate">
+                            <option value="">Select template...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Handoff Targets</label>
+                        <div class="tool-list" id="cfgHandoffTargets"></div>
+                    </div>
+                </div>
+
+                <!-- Tools Tab -->
+                <div class="tab-panel" id="tab-tools">
+                    <div class="form-group">
+                        <label>Assigned Tools (<span id="toolCount">0</span>)</label>
+                        <div class="tool-list" id="cfgTools"></div>
+                    </div>
+                    <p style="font-size:11px;color:var(--text-muted);margin-top:8px">
+                        Drag tools from the marketplace or click to remove.
+                    </p>
+                </div>
+
+                <!-- Capabilities Tab -->
+                <div class="tab-panel" id="tab-caps">
+                    <div class="form-group">
+                        <label>Skills</label>
+                        <div class="cap-list" id="cfgSkills"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Produces</label>
+                        <div class="cap-list" id="cfgProduces"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Requires</label>
+                        <div class="cap-list" id="cfgRequires"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button id="btnVersionHistory">History</button>
+                <button id="btnSaveAgent" class="btn-save">Save Agent</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agent Templates</h2>
+                <button class="sidebar-close" id="closeTemplateModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>New Agent Name</label>
+                    <input type="text" id="cloneName" placeholder="my-custom-agent">
+                </div>
+                <div class="template-grid" id="templateGrid"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelTemplate">Cancel</button>
+                <button id="btnCloneTemplate" class="btn-primary" disabled>Clone Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version History Modal -->
+    <div class="modal-overlay" id="versionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Version History</h2>
+                <button class="sidebar-close" id="closeVersionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="version-table">
+                    <thead><tr><th>Version</th><th>Created</th><th>Author</th><th></th></tr></thead>
+                    <tbody id="versionTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Agent Modal -->
+    <div class="modal-overlay" id="newAgentModal">
+        <div class="modal-content" style="width:400px">
+            <div class="modal-header">
+                <h2>Create New Agent</h2>
+                <button class="sidebar-close" id="closeNewAgentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Agent Name</label>
+                    <input type="text" id="newAgentName" placeholder="my-agent">
+                </div>
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="newAgentDisplayName" placeholder="My Agent">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="newAgentDescription" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelNewAgent">Cancel</button>
+                <button id="btnCreateAgent" class="btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="builder-toast" id="toast"></div>
+
+    <script src="/static/vendor/cytoscape.min.js"></script>
+    <script src="/static/js/builder.js"></script>
+</body>
+</html>

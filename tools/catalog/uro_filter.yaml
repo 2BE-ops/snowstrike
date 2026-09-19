@@ -1,0 +1,32 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: uro_filter
+  category: utility
+  requires_root: false
+  binary: uro
+  passive: true
+spec:
+  flag_map:
+  - param: input_file
+    flag: -i
+  - param: filters
+    flag: -f
+  compatible_agents:
+  - webapp
+  description: URL deduplication and filtering using uro. Removes duplicate and similar
+    URLs.
+  input_schema:
+    type: object
+    properties:
+      input_file:
+        type: string
+        description: Input file containing URLs.
+      filters:
+        type: string
+        description: Filter string for URL processing.
+      extra_args:
+        type: string
+        description: Additional uro arguments.
+    required:
+    - input_file

@@ -1,0 +1,39 @@
+apiVersion: snowstrike/v1
+kind: Tool
+metadata:
+  name: testssl_scan
+  category: network_scanning
+  requires_root: false
+  binary: testssl.sh
+  passive: false
+spec:
+  description: Comprehensive SSL/TLS testing using testssl.sh. Checks ciphers, protocols,
+    vulnerabilities, and certificate details.
+  input_schema:
+    type: object
+    properties:
+      target:
+        type: string
+        description: Target host:port (e.g., 'example.com:443').
+      severity:
+        type: string
+        enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        - CRITICAL
+        description: Minimum severity to report.
+      extra_args:
+        type: string
+        description: Additional testssl arguments.
+    required:
+    - target
+  timeout: 360
+  cumulative_ceiling: 500
+  compatible_agents:
+  - recon
+  flag_map:
+  - param: severity
+    flag: --severity
+  - param: target
+    flag: null
